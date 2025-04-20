@@ -1,12 +1,40 @@
-# React + Vite
+# FocusZen-WEB
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FocusZen-WEB is a productivity web application designed to help users stay focused by limiting distractions and promoting effective time management. This application allows users to set up focus sessions, configure allowed websites, and receive reminders when they navigate to disallowed websites.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Focus Timer**: Set a focus session timer to stay productive.
+- **Allowed Websites**: Configure a list of websites that you are permitted to visit during a focus session.
+- **Distraction Alerts**: Displays a "Stay Focused!" overlay when you navigate to disallowed websites.
+- **Session Data Sync**: Sends focus session data to a browser extension for enhanced functionality.
+- **Local Storage Integration**: Saves session settings locally to ensure persistence between sessions.
 
-## Expanding the ESLint configuration
+## Technology Stack
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend Framework**: React with Vite for fast development and hot module replacement.
+- **Styling**: Minimal CSS for a clean, responsive user interface.
+- **State Management**: React hooks for managing component state.
+- **Local Storage**: For storing user configurations and session data.
+
+## Installation
+
+Follow the steps below to set up and run the application locally:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Aadarsh6/FocusZen-WEB.git
+   cd FocusZen-WEB
+
+Install dependencies:
+bash
+
+npm install
+
+
+Start the development server:
+bash
+
+npm run dev
+
+Open the application in your browser at http://localhost:3000.
