@@ -29,6 +29,11 @@ const FocusSetup = () => {
       setError("Set the timer for 1 minutes or");
       return;
     }
+
+    const focusTime = parseInt(time)
+    const startTime = Date.now()
+    const endTime = startTime + focusTime * 60 * 1000
+
     localStorage.setItem(
       "Focus.url",
       JSON.stringify(url.filter(Boolean))
@@ -40,7 +45,11 @@ const FocusSetup = () => {
     Falsy values in JavaScript are:  
     false, 0, "" (empty string), null, undefined, and NaN. 
     So, url.filter(Boolean) will remove any empty strings or null values from the array. */
-    localStorage.setItem("Focus.time", time);
+    localStorage.setItem("Focus.time", focusTime);
+    localStorage.setItem("Focus.StartTime", startTime);
+    localStorage.setItem("Focus.EndTime", endTime);
+
+    
     // console.log("navigate to focus");
 
     navigate("/focus");
