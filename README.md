@@ -26,15 +26,18 @@ Follow the steps below to set up and run the application locally:
    git clone https://github.com/Aadarsh6/FocusZen-WEB.git
    cd FocusZen-WEB
 
-Install dependencies:
-bash
-
+2. Install dependencies:
+```bash
 npm install
+```
 
 
-Start the development server:
-bash
-
+3. Start the development server:
+```bash
 npm run dev
+```
 
-Open the application in your browser at http://localhost:3000.
+4. Open the application in your browser at 
+```bash
+http://localhost:3000.
+```
