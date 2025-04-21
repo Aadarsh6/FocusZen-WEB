@@ -49,6 +49,9 @@ const Focus = () => {
 
   const urls = JSON.parse(localStorage.getItem("Focus.url") || "[]");
   const time = parseInt(localStorage.getItem("Focus.time") || "0");
+  // const endTime = parseInt(localStorage.getItem("Focus.EndTime") || "0");
+  // const currentTime = Date.now();
+  // const remainingSeconds = Math.floor((endTime - currentTime) / 1000);
 
   // 🔁 Send focus session data to extension
   useEffect(() => {
@@ -80,10 +83,16 @@ const Focus = () => {
     navigate("/success");
   };
 
+  const handleReset =() =>{  // ADDED OnRest HERE CREATED A SPECIAL FN
+    window.postMessage({
+      type: "EndFocusSession"
+    }, "*")
+  };
+
   return (
     <div className="flex flex-col justify-center items-center h-screen gap-4 bg-gray-900 text-white">
-      <Timer initialTimer={time * 60} onComplete={handleSuccess} />
-
+      <Timer initialTimer={time * 60} onComplete={handleSuccess} onReset={handleReset} /> {// ADDED OnRest HERE
+}
       {wrongTab && (
         <div className="fixed top-0 left-0 w-full h-full bg-red-900/70 flex justify-center items-center text-3xl font-bold">
           STAY FOCUSED!

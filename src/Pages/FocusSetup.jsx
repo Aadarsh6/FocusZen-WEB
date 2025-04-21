@@ -45,7 +45,12 @@ const FocusSetup = () => {
     Falsy values in JavaScript are:  
     false, 0, "" (empty string), null, undefined, and NaN. 
     So, url.filter(Boolean) will remove any empty strings or null values from the array. */
-    localStorage.setItem("Focus.time", focusTime);
+
+    // When focus starts (in your setup or submit function)
+
+
+
+    localStorage.setItem("Focus.time", focusTime );
     localStorage.setItem("Focus.StartTime", startTime);
     localStorage.setItem("Focus.EndTime", endTime);
 

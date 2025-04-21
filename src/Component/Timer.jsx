@@ -1,9 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const Timer = ({ initialTimer, onComplete }) => {
-  const [timeLeft, setTimeLeft] = useState(initialTimer);
+const Timer = ({ initialTimer, onComplete, onReset }) => {  //NEW PROP OnRest
+  const storeTimeLeft = localStorage.getItem("timeLeft")
+  const [timeLeft, setTimeLeft] = useState(storeTimeLeft ? Number(storeTimeLeft) : initialTimer);
   const [isRunning, setIsRunning] = useState(true);
+
+  
+  
+  useEffect(()=>{
+    if(timeLeft >= 0) {
+      localStorage.setItem("timeLeft", timeLeft);
+  }
+},[timeLeft])
+
+useEffect(()=>{
+  setTimeLeft(initialTimer)
+},[initialTimer])
+
+// ⏳ Countdown logic
 
   useEffect(() => {
     let timer;
@@ -52,7 +67,9 @@ const Timer = ({ initialTimer, onComplete }) => {
           <button
             onClick={() => {
               setIsRunning(false);
+              localStorage.removeItem("timeLeft")
               setTimeLeft(initialTimer);
+              onReset()   //OnRest
             }}
             className="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
           >

@@ -1,6 +1,9 @@
 import confetti from "canvas-confetti";
 
 export const ShootConfetti = () => {
+ 
+
+  
   const duration = 4000; // 4 seconds
   const end = Date.now() + duration;
 
@@ -15,7 +18,10 @@ export const ShootConfetti = () => {
 
   const interval = setInterval(() => {
     const timeLeft = end - Date.now();
-
+    
+    if(location.pathname !== "/success"){
+      clearInterval(interval)
+    }
     if (timeLeft <= 0) {
       clearInterval(interval);
       return;
@@ -31,6 +37,8 @@ export const ShootConfetti = () => {
       },
     });
   }, 250);
+
+ 
 };
 
 
