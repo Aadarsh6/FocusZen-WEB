@@ -105,7 +105,7 @@ import { useNavigate } from "react-router-dom";
 
 const FocusSetup = () => {
   const navigate = useNavigate();
-  const [url, setUrl] = useState(["", "", ""]);
+  const [url, setUrl] = useState(["http://localhost:5173/focus", "", "" ]);
   // const [blockWebsite, setBlockWebsite] = useState(["", ""]);
   const [time, setTime] = useState(25);
   const [error, setError] = useState("");
@@ -169,7 +169,7 @@ const FocusSetup = () => {
             <h2 className="text-lg font-semibold text-purple-200 mb-3">Allowed Websites</h2>
             <p className="text-sm text-purple-200 mb-3">Enter the websites you'll be using during your focus session</p>
             
-            <div className="space-y-3">
+          <div className="space-y-3">
               {url.map((siteUrl, index) => (
                 <div key={index} className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">

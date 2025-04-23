@@ -96,19 +96,23 @@ import { Link } from "react-router-dom";
 
 const Timer = ({ initialTimer, onComplete, onReset }) => {
   const storeTimeLeft = localStorage.getItem("timeLeft");
-  const [timeLeft, setTimeLeft] = useState(storeTimeLeft ? Number(storeTimeLeft) : initialTimer);
+  const [timeLeft, setTimeLeft] = useState(
+    storeTimeLeft && Number(storeTimeLeft) > 0 ? Number(storeTimeLeft) : initialTimer
+  );
   const [isRunning, setIsRunning] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    if (timeLeft >= 0 && timeLeft % 5 === 0) {
+    if (timeLeft >= 0) {
       localStorage.setItem("timeLeft", timeLeft);
     }
   }, [timeLeft]);
 
   useEffect(() => {
-    setTimeLeft(initialTimer);
-  }, [initialTimer]);
+    if(!storeTimeLeft || storeTimeLeft <=0){
+      setTimeLeft(initialTimer);
+    }
+  }, [initialTimer, storeTimeLeft]);
 
 
   //Countdown
@@ -150,9 +154,9 @@ const Timer = ({ initialTimer, onComplete, onReset }) => {
   // Calculate time-based color gradients - NEW COLOR SCHEME
   const getColorClass = () => {
     const percentage = (timeLeft / initialTimer) * 100;
-    if (percentage > 60) return "from-teal-500 to-cyan-600";
-    if (percentage > 25) return "from-cyan-500 to-blue-600";
-    return "from-orange-500 to-red-600";
+    if (percentage > 60) return "from-teal-700 to-cyan-800";
+    if (percentage > 25) return "from-cyan-700 to-blue-800";
+    return "from-orange-700 to-red-800";
   };
 
   // Format for human-readable time left
@@ -164,8 +168,6 @@ const Timer = ({ initialTimer, onComplete, onReset }) => {
 
   return (
     <div className="flex flex-col items-center w-full max-w-md p-8 rounded-3xl bg-slate-900 shadow-xl border border-slate-800 relative overflow-hidden">
-      {/* Background patterns */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-800 opacity-80"></div>
       
       {/* Timer Header */}
       <div className="relative z-10 w-full flex items-center justify-between mb-6">
