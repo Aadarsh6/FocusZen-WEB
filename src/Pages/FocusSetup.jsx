@@ -122,13 +122,15 @@ const FocusSetup = () => {
   //   setBlockWebsite(updated);
   // };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
     if (!url[0]) {
       setError("Enter At Least 1 URL");
       return;
     }
     if (!time || time <= 0) {
       setError("Set the timer for 1 minute or more");
+      setTime(1);
       return;
     }
 
@@ -161,6 +163,9 @@ const FocusSetup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-800 to-purple-900 flex items-center justify-center p-4">
+      <form
+      onSubmit={handleSubmit}
+      >
       <div className="w-full max-w-md bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8">
         <h1 className="text-2xl md:text-3xl font-bold text-white text-center mb-6">Setup Focus Session</h1>
         
@@ -236,13 +241,15 @@ const FocusSetup = () => {
           )}
           
           <button
-            onClick={handleSubmit}
+            type="submit"
+            // onClick={handleSubmit}
             className="w-full bg-gradient-to-r from-purple-700 to-indigo-800 hover:from-purple-600 hover:to-indigo-700 text-white font-medium py-3 px-4 rounded-lg shadow-lg transition-all duration-300 transform hover:translate-y-px focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
           >
             Start Focus Session
           </button>
         </div>
       </div>
+      </form>
     </div>
   );
 };

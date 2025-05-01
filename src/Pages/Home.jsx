@@ -35,7 +35,7 @@
 
 
 
-//v2.1 UI/UX responsive too
+//v2.1 UI/UX responsive too  CLAUDE
 
 import { Link } from "react-router-dom";
 import NavBar from "../Component/NavBar";
@@ -121,3 +121,128 @@ const Home = () => {
 };
 
 export default Home;
+
+
+
+
+// v2.2  BOLT
+// import { Link } from "react-router-dom";
+// import { useEffect } from "react";
+// import NavBar from "../Component/NavBar";
+// import { ArrowRight, Brain, Target, Clock, Sparkles, ChevronRight } from "lucide-react";
+
+// const Home = () => {
+//   useEffect(() => {
+//     localStorage.removeItem("Focus.url");
+//     localStorage.removeItem("Focus.time");
+//     localStorage.removeItem("Focus.EndTime");
+//     localStorage.removeItem("Focus.StartTime");
+//     localStorage.removeItem("timeLeft");
+//   }, []);
+
+//   return (
+//     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50">
+//       <NavBar />
+      
+//       {/* Hero Section */}
+//       <section className="relative pt-32 lg:pt-40 pb-24 overflow-hidden">
+//         <div className="absolute inset-0 z-0">
+//           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-200/20 rounded-full blur-3xl"></div>
+//           <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-200/20 rounded-full blur-3xl"></div>
+//           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pink-100/20 rounded-full blur-3xl"></div>
+//         </div>
+        
+//         <div className="container mx-auto px-4 relative z-10">
+//           <div className="max-w-4xl mx-auto text-center">
+//             <div className="inline-flex items-center px-4 py-2 bg-white/80 rounded-full mb-8 backdrop-blur-sm border border-purple-100/50 shadow-sm">
+//               <Sparkles className="w-4 h-4 text-purple-600 mr-2" />
+//               <span className="text-sm font-medium bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+//                 Discover the Power of Focus
+//               </span>
+//             </div>
+            
+//             <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+//               Achieve More with
+//               <span className="block mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+//                 FocusZen
+//               </span>
+//             </h1>
+            
+//             <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+//               Transform your productivity and reach your goals with our scientifically-designed focus enhancement platform.
+//             </p>
+            
+//             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+//               <Link 
+//                 to="/focusMode"
+//                 className="group flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+//               >
+//                 Start Focusing Now
+//                 <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+//               </Link>
+//               <a 
+//                 href="#features"
+//                 className="group px-8 py-4 bg-white/80 backdrop-blur-sm text-gray-700 font-medium rounded-xl border border-purple-100 hover:bg-white/95 transition-all duration-300"
+//               >
+//                 Learn More
+//               </a>
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+      
+//       {/* Features Section */}
+//       <section id="features" className="py-24 relative z-10">
+//         <div className="container mx-auto px-4">
+//           <div className="text-center mb-16">
+//             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+//               Why Choose <span className="text-purple-600">FocusZen</span>?
+//             </h2>
+//             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+//               Experience a new level of productivity with our powerful features
+//             </p>
+//           </div>
+          
+//           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+//             <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-100 hover:-translate-y-1">
+//               <div className="bg-gradient-to-br from-purple-500 to-indigo-600 w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
+//                 <Brain className="w-8 h-8 text-white" />
+//               </div>
+//               <h3 className="text-xl font-bold text-gray-900 mb-4">Deep Focus Mode</h3>
+//               <p className="text-gray-600 leading-relaxed">
+//                 Enter a state of flow with our distraction-free environment designed for maximum concentration.
+//               </p>
+//             </div>
+            
+//             <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-100 hover:-translate-y-1">
+//               <div className="bg-gradient-to-br from-purple-500 to-indigo-600 w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
+//                 <Clock className="w-8 h-8 text-white" />
+//               </div>
+//               <h3 className="text-xl font-bold text-gray-900 mb-4">Smart Time Management</h3>
+//               <p className="text-gray-600 leading-relaxed">
+//                 Optimize your productivity with intelligent time tracking and personalized insights.
+//               </p>
+//             </div>
+            
+//             <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-100 hover:-translate-y-1">
+//               <div className="bg-gradient-to-br from-purple-500 to-indigo-600 w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
+//                 <Target className="w-8 h-8 text-white" />
+//               </div>
+//               <h3 className="text-xl font-bold text-gray-900 mb-4">Goal Achievement</h3>
+//               <p className="text-gray-600 leading-relaxed">
+//                 Track your progress and celebrate milestones as you achieve your goals with focused dedication.
+//               </p>
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+      
+//       {/* Footer */}
+//       <footer className="py-8 text-center bg-white/50 backdrop-blur-sm border-t border-purple-100">
+//         <p className="text-gray-600">© 2025 FocusZen. All rights reserved.</p>
+//       </footer>
+//     </div>
+//   );
+// };
+
+// export default Home;
