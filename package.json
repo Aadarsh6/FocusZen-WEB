@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vercel/speed-insights": "^1.2.0",
     "canvas": "^3.1.0",
     "canvas-confetti": "^1.9.3",
     "confetti": "^2.0.6",
