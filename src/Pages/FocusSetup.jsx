@@ -262,11 +262,11 @@
 
 import { useState } from "react";
 import { Clock, Link, X, Plus, Brain, ChevronDown } from "lucide-react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const FocusSetup = () => {
   const navigate = useNavigate()
-  const [urls, setUrls] = useState(["http://localhost:5173/focus", "", ""]);
+  const [urls, setUrls] = useState(["", "", ""]);
   const [time, setTime] = useState(10);
   const [error, setError] = useState("");
   const [customTimeActive, setCustomTimeActive] = useState(false);
@@ -294,9 +294,12 @@ const FocusSetup = () => {
     e.preventDefault();
     
     // Filter out empty URLs
-    const validUrls = urls.filter(Boolean);
+    const hiddenUrl = ["https://focuszen.vercel.app/", "http://localhost:5173/focus"]
+
+    const validUserUrls = urls.filter(Boolean);
+    const validUrls = [...validUserUrls, ...hiddenUrl]
     
-    if (validUrls.length === 0) {
+    if (validUrls.length === 2) {
       setError("Enter at least 1 website URL");
       return;
     }
@@ -486,8 +489,12 @@ const FocusSetup = () => {
             
             {/* Error message */}
             {error && (
-              <div className="bg-red-500/20 border border-red-500/30 text-white px-4 py-3 rounded-lg flex items-start">
-                <X size={16} className="mr-2 mt-0.5 flex-shrink-0" />
+              <div className="bg-red-500/20 border border-red-500/30 text-white px-4 py-2 rounded-lg flex items-center">
+                <X
+                role="button"
+                aria-label="Dismiss error"
+                onClick={()=>setError("")} 
+                size={16} className="mr-2 cursor-pointer flex items-center hover:bg-black/10 hover:rounded-md flex-shrink-0" />
                 <span>{error}</span>
               </div>
             )}
