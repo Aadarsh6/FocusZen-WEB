@@ -87,7 +87,6 @@
 
 
 
-
 //v2.1 UI/UX responsive too
 
 

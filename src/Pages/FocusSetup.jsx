@@ -340,7 +340,6 @@ const FocusSetup = () => {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${getThemeClasses()} transition-colors duration-500 flex items-center justify-center p-2`}>
-      <form onClick={handleSubmit}>
         {/* <div className="flex justify-start mb-6">
           <div className="bg-white/10 backdrop-blur-md rounded-full p-3 shadow-lg">
             <Brain size={20} className="text-white" />
@@ -495,7 +494,7 @@ const FocusSetup = () => {
                 role="button"
                 aria-label="Dismiss error"
                 onClick={()=>setError("")} 
-                size={16} className="mr-2 cursor-pointer flex items-center hover:bg-black/10 hover:rounded-md flex-shrink-0" />
+                size={15} className="mr-1 cursor-pointer flex items-center hover:bg-black/10 hover:rounded-md flex-shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -504,8 +503,7 @@ const FocusSetup = () => {
           {/* Footer */}
           <div className="px-8 py-6 mt-6 bg-black/20">
             <button
-            type="submit"
-              // onClick={handleSubmit}
+              onClick={handleSubmit}
               className="w-full bg-white hover:bg-opacity-90 text-purple-900 font-semibold py-3 px-4 rounded-lg shadow-lg transition-all duration-300 transform hover:translate-y-px focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 flex items-center justify-center"
             >
               <Brain size={20} className="mr-2" />
@@ -518,7 +516,6 @@ const FocusSetup = () => {
           Design your perfect focus environment
         </div>
       </div>
-      </form>
     </div>
   );
 };
