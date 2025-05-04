@@ -34,63 +34,109 @@
 
 
 //v2.1 UI/UX responsive too
-
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("/");
+
+  // Handle scroll effects
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMenuOpen && !event.target.closest('nav')) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMenuOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const navigation = [
+    { name: "Home", path: "/" },
+    { name: "Focus Mode", path: "/focusMode" },
+    { name: "Statistics", path: "/statistics" },
+    { name: "Settings", path: "/settings" }
+  ];
+
   return (
-    <nav className="bg-gradient-to-r from-purple-500 to-indigo-600 shadow-md">
+    <nav 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? "bg-white shadow-lg" : "bg-black/10"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo or Title */}
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <NavLink to="/" className="flex items-center">
-              <span className="text-2xl font-bold text-white">Focus</span>
-              <span className="text-2xl font-bold text-purple-200">Zen</span>
+            <NavLink to="/" className="flex items-center space-x-2 group">
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300">
+                <span className="text-white font-bold text-lg">F</span>
+              </div>
+              <div className="flex items-baseline">
+                <span className={`text-xl font-bold transition-colors duration-300 ${scrolled ? "text-gray-800" : "text-gray-800"}`}>Focus</span>
+                <span className={`text-xl font-bold transition-colors duration-300 ${scrolled ? "text-purple-600" : "text-purple-500"}`}>Zen</span>
+              </div>
             </NavLink>
           </div>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
-            <NavLink
-              to="/"
-              className={({ isActive }) => 
-                `px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-                  isActive 
-                    ? "text-white bg-purple-700/50 rounded-lg" 
-                    : "text-purple-100 hover:text-white hover:bg-purple-700/30 rounded-lg"
-                }`
-              }
-            >
-              Home
-            </NavLink>
-            <NavLink
-              to="/focusMode"
-              className={({ isActive }) => 
-                `px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-                  isActive 
-                    ? "text-white bg-purple-700/50 rounded-lg" 
-                    : "text-purple-100 hover:text-white hover:bg-purple-700/30 rounded-lg"
-                }`
-              }
-            >
-              Focus Mode
-            </NavLink>
+          <div className="hidden md:flex items-center space-x-1">
+            {navigation.map((item) => (
+              <NavLink
+                key={item.name}
+                to={item.path}
+                className={({ isActive }) => {
+                  if (isActive) setActiveSection(item.path);
+                  return `px-4 py-2 mx-1 rounded-full text-sm font-medium transition-all duration-200 ${
+                    item.path === activeSection
+                      ? "text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-md"
+                      : `${scrolled ? "text-gray-700" : "text-gray-700"} hover:bg-purple-50 hover:text-purple-700`
+                  }`;
+                }}
+              >
+                {item.name}
+              </NavLink>
+            ))}
+          </div>
+
+          {/* Action Button */}
+          <div className="hidden md:flex items-center">
+            <button className="ml-6 px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-full shadow-md hover:shadow-lg transform hover:translate-y-px transition-all duration-200">
+              Get Started
+            </button>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-purple-200 hover:text-white hover:bg-purple-700/30 focus:outline-none"
-              aria-expanded="false"
+              className={`inline-flex items-center justify-center p-2 rounded-lg focus:outline-none transition-colors duration-200 ${
+                scrolled 
+                  ? "text-gray-700 hover:bg-gray-100" 
+                  : "text-gray-700 hover:bg-white/20"
+              }`}
+              aria-expanded={isMenuOpen}
             >
               <span className="sr-only">Open main menu</span>
               {!isMenuOpen ? (
@@ -107,45 +153,72 @@ const NavBar = () => {
         </div>
       </div>
 
-      {/* Mobile menu, show/hide based on state */}
-      {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-indigo-800 shadow-lg rounded-b-lg">
-            <NavLink
-              to="/"
-              className={({ isActive }) => 
-                `block px-3 py-2 rounded-md text-base font-medium ${
-                  isActive 
-                    ? "text-white bg-purple-600" 
-                    : "text-purple-200 hover:text-white hover:bg-purple-600/70"
-                }`
-              }
-              onClick={() => setIsMenuOpen(false)}
+      {/* Mobile menu */}
+      <div
+        className={`md:hidden fixed inset-0 z-40 transform ${
+          isMenuOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out`}
+      >
+        <div className="absolute right-0 top-0 bottom-0 w-full max-w-xs bg-white shadow-xl flex flex-col h-full">
+          <div className="flex items-center justify-between px-4 h-16 border-b border-gray-200">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">F</span>
+              </div>
+              <div>
+                <span className="text-xl font-bold text-gray-800">Focus</span>
+                <span className="text-xl font-bold text-purple-600">Zen</span>
+              </div>
+            </div>
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none"
             >
-              Home
-            </NavLink>
-            <NavLink
-              to="/focusMode"
-              className={({ isActive }) => 
-                `block px-3 py-2 rounded-md text-base font-medium ${
-                  isActive 
-                    ? "text-white bg-purple-600" 
-                    : "text-purple-200 hover:text-white hover:bg-purple-600/70"
-                }`
-              }
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Focus Mode
-            </NavLink>
+              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto px-4 py-6">
+            <div className="space-y-3">
+              {navigation.map((item) => (
+                <NavLink
+                  key={item.name}
+                  to={item.path}
+                  className={({ isActive }) => `
+                    block px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 ${
+                      isActive
+                        ? "text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-sm"
+                        : "text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+                    }
+                  `}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+          
+          <div className="p-4 border-t border-gray-200">
+            <button className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transform hover:translate-y-px transition-all duration-200">
+              Get Started
+            </button>
           </div>
         </div>
-      )}
+        
+        {/* Backdrop */}
+        <div 
+          className="absolute inset-0 bg-black bg-opacity-40"
+          onClick={() => setIsMenuOpen(false)}
+        ></div>
+      </div>
     </nav>
   );
 };
 
 export default NavBar;
-
 
 //v2.2 BOLT
 // import { useState, useEffect } from "react";

@@ -55,7 +55,7 @@ const Home = () => {
       <NavBar />
       <main className="flex-1 flex flex-col justify-center items-center px-6 md:px-10 py-12 w-full">
         <div className="w-full max-w-3xl text-center space-y-6 md:space-y-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+          <h1 className="text-4xl md:text-5xl mt-10 font-bold text-gray-900">
             Welcome to <span className="text-purple-600">FocusZen</span>
           </h1>
           
