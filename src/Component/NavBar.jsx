@@ -34,13 +34,16 @@
 
 
 //v2.1 UI/UX responsive too
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("/");
+
+  // Get the current location to track active link
+  const location = useLocation();
 
   // Handle scroll effects
   useEffect(() => {
@@ -72,6 +75,11 @@ const NavBar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Update active section when location changes
+  useEffect(() => {
+    setActiveSection(location.pathname);
+  }, [location.pathname]);
+
   const navigation = [
     { name: "Home", path: "/" },
     { name: "Focus Mode", path: "/focusMode" },
@@ -81,9 +89,7 @@ const NavBar = () => {
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white shadow-lg" : "bg-black/10"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-slate-200 shadow-xl" : "bg-black/5"}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -106,14 +112,11 @@ const NavBar = () => {
               <NavLink
                 key={item.name}
                 to={item.path}
-                className={({ isActive }) => {
-                  if (isActive) setActiveSection(item.path);
-                  return `px-4 py-2 mx-1 rounded-full text-sm font-medium transition-all duration-200 ${
-                    item.path === activeSection
-                      ? "text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-md"
-                      : `${scrolled ? "text-gray-700" : "text-gray-700"} hover:bg-purple-50 hover:text-purple-700`
-                  }`;
-                }}
+                className={`px-4 py-2 mx-1 rounded-full text-sm font-medium transition-all duration-200 ${
+                  item.path === activeSection
+                    ? "text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-md"
+                    : `${scrolled ? "text-gray-700" : "text-gray-700"} hover:bg-purple-50 hover:text-purple-700`
+                }`}
               >
                 {item.name}
               </NavLink>
@@ -132,9 +135,7 @@ const NavBar = () => {
             <button
               onClick={toggleMenu}
               className={`inline-flex items-center justify-center p-2 rounded-lg focus:outline-none transition-colors duration-200 ${
-                scrolled 
-                  ? "text-gray-700 hover:bg-gray-100" 
-                  : "text-gray-700 hover:bg-white/20"
+                scrolled ? "text-gray-700 hover:bg-gray-100" : "text-gray-700 hover:bg-white/20"
               }`}
               aria-expanded={isMenuOpen}
             >
@@ -155,9 +156,7 @@ const NavBar = () => {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden fixed inset-0 z-40 transform ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out`}
+        className={`md:hidden fixed inset-0 z-40 transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 ease-in-out`}
       >
         <div className="absolute right-0 top-0 bottom-0 w-full max-w-xs bg-white shadow-xl flex flex-col h-full">
           <div className="flex items-center justify-between px-4 h-16 border-b border-gray-200">
@@ -186,13 +185,11 @@ const NavBar = () => {
                 <NavLink
                   key={item.name}
                   to={item.path}
-                  className={({ isActive }) => `
-                    block px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 ${
-                      isActive
-                        ? "text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-sm"
-                        : "text-gray-700 hover:bg-purple-50 hover:text-purple-700"
-                    }
-                  `}
+                  className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 ${
+                    item.path === activeSection
+                      ? "text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-sm"
+                      : "text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+                  }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}

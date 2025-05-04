@@ -263,6 +263,7 @@
 import { useState } from "react";
 import { Clock, Link, X, Plus, Brain, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../Component/NavBar";
 
 const FocusSetup = () => {
   const navigate = useNavigate()
@@ -339,7 +340,9 @@ const FocusSetup = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${getThemeClasses()} transition-colors duration-500 flex items-center justify-center p-2`}>
+    <div>
+      <NavBar/>
+    <div className={`min-h-screen pt-24 bg-gradient-to-br ${getThemeClasses()} transition-colors duration-500 flex items-center justify-center p-2`}>
         {/* <div className="flex justify-start mb-6">
           <div className="bg-white/10 backdrop-blur-md rounded-full p-3 shadow-lg">
             <Brain size={20} className="text-white" />
@@ -516,6 +519,7 @@ const FocusSetup = () => {
           Design your perfect focus environment
         </div>
       </div>
+    </div>
     </div>
   );
 };
