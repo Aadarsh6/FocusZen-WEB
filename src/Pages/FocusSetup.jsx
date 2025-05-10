@@ -261,7 +261,7 @@
 //v2.2
 
 import { useState } from "react";
-import { Clock, Link, X, Plus, Brain, ChevronDown } from "lucide-react";
+import { Clock, Link, X, Plus, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Component/NavBar";
 
@@ -271,8 +271,8 @@ const FocusSetup = () => {
   const [time, setTime] = useState(10);
   const [error, setError] = useState("");
   const [customTimeActive, setCustomTimeActive] = useState(false);
-  const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState(false);
-  const [theme, setTheme] = useState(""); // default, nature, sunset, ocean
+  // const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState(false);
+  // const [theme, setTheme] = useState(""); // default, nature, sunset, ocean
 
   const handleUrl = (index, value) => {
     const newUrls = [...urls];
@@ -327,22 +327,22 @@ const FocusSetup = () => {
 
   const timeOptions = [10, 25, 30, 45, 60, 90, 120];
 
-  const themes = [
-    { id: "default", name: "Nature Calm", class: "from-emerald-700 to-teal-900" },
-    { id: "sunset", name: "Sunset", class: "from-orange-600 to-rose-800" },
-    { id: "ocean", name: "Ocean", class: "from-blue-700 to-cyan-900" },
-    { id: "nature", name: "Deep Focus", class: "from-indigo-800 to-purple-900" },
-  ];
+  // const themes = [
+  //   { id: "default", name: "Nature Calm", class: "from-emerald-700 to-teal-900" },
+  //   { id: "sunset", name: "Sunset", class: "from-orange-600 to-rose-800" },
+  //   { id: "ocean", name: "Ocean", class: "from-blue-700 to-cyan-900" },
+  //   { id: "nature", name: "Deep Focus", class: "from-indigo-800 to-purple-900" },
+  // ];
 
-  const getThemeClasses = () => {
-    const selectedTheme = themes.find(t => t.id === theme);
-    return selectedTheme ? selectedTheme.class : themes[0].class;
-  };
+  // const getThemeClasses = () => {
+  //   const selectedTheme = themes.find(t => t.id === theme);
+  //   return selectedTheme ? selectedTheme.class : themes[0].class;
+  // };
 
   return (
     <div>
       <NavBar/>
-    <div className={`min-h-screen pt-24 bg-gradient-to-br ${getThemeClasses()} transition-colors duration-500 flex items-center justify-center p-2`}>
+    <div className={`min-h-screen pt-24 bg-gradient-to-br bg-gray-600 transition-colors duration-500 flex items-center justify-center p-2`}>
         {/* <div className="flex justify-start mb-6">
           <div className="bg-white/10 backdrop-blur-md rounded-full p-3 shadow-lg">
             <Brain size={20} className="text-white" />
@@ -355,7 +355,7 @@ const FocusSetup = () => {
           <div className="px-8 pt-8 pb-4 flex justify-between items-center">
             <h1 className="text-3xl font-bold text-white">Focus Session</h1>
             
-            <div className="relative">
+            {/* <div className="relative">
               <button 
                 type="button"
                 className="bg-white/20 hover:bg-white/40 transition text-white text-sm py-2 px-3 rounded-lg flex items-center space-x-2"
@@ -383,7 +383,7 @@ const FocusSetup = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
           
           <p className="px-8 text-white/70 text-sm pb-6">
