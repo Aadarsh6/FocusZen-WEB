@@ -36,16 +36,21 @@
 //v2.1 UI/UX responsive too
 import { NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+// import { useTheme } from "../Context/themeContext.js";  // Ensure you are importing the correct context
+import { Moon, Sun } from 'lucide-react';  // Optional icons for dark/light mode toggle
+import { useTheme } from "../Context";
+// import { text } from "framer-mtion/client";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("/");
 
-  // Get the current location to track active link
+  const { toggleMode, theme } = useTheme();  // Added theme here
+
   const location = useLocation();
 
-  // Handle scroll effects
+  // Handle scroll effects to change navbar appearance
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -59,28 +64,12 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isMenuOpen && !event.target.closest('nav')) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isMenuOpen]);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   // Update active section when location changes
   useEffect(() => {
     setActiveSection(location.pathname);
   }, [location.pathname]);
 
-  const navigation = [
+  const navigationLinks = [
     { name: "Home", path: "/" },
     { name: "Focus Mode", path: "/focusMode" },
     { name: "Statistics", path: "/statistics" },
@@ -89,7 +78,14 @@ const NavBar = () => {
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-slate-200 shadow-xl" : "bg-black/5"}`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 
+        ${theme === 'light'
+          ? scrolled
+            ? 'bg-slate-200 text-gray-800 shadow-xl'
+            : 'bg-white text-gray-800'
+          : scrolled
+            ? 'bg-gray-900 text-white shadow-xl'
+            : 'bg-gray-800 text-white'}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -100,23 +96,45 @@ const NavBar = () => {
                 <span className="text-white font-bold text-lg">F</span>
               </div>
               <div className="flex items-baseline">
-                <span className={`text-xl font-bold transition-colors duration-300 ${scrolled ? "text-gray-800" : "text-gray-800"}`}>Focus</span>
+                <span className={`text-xl font-bold transition-colors duration-300 ${theme === "dark" ? "transform duration-500 text-white" : scrolled ? "text-gray-800" : "text-gray-800"}`}>Focus</span>
                 <span className={`text-xl font-bold transition-colors duration-300 ${scrolled ? "text-purple-600" : "text-purple-500"}`}>Zen</span>
               </div>
             </NavLink>
           </div>
 
+          {/* Mode Button */}
+          <button
+            onClick={toggleMode}
+            className="ml-4 px-4 py-2 text-sm rounded-full font-medium transition-colors duration-200 
+            bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center space-x-2"
+          >
+            {theme === 'light' ? (
+              <>
+                <Moon className="w-4 h-4" />
+                <span>Dark Mode</span>
+              </>
+            ) : (
+              <>
+                <Sun className="w-4 h-4" />
+                <span>Light Mode</span>
+              </>
+            )}
+          </button>
+
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-1">
-            {navigation.map((item) => (
+            {navigationLinks.map((item) => (
               <NavLink
                 key={item.name}
                 to={item.path}
                 className={`px-4 py-2 mx-1 rounded-full text-sm font-medium transition-all duration-200 ${
                   item.path === activeSection
                     ? "text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-md"
-                    : `${scrolled ? "text-gray-700" : "text-gray-700"} hover:bg-purple-50 hover:text-purple-700`
-                }`}
+                    : `${
+                        theme === "dark" ? "transform duration-500 text-white" : scrolled ? "text-gray-700" : "text-gray-700"
+                      } hover:bg-purple-50 hover:text-purple-700`}
+                `}
+                
               >
                 {item.name}
               </NavLink>
@@ -133,7 +151,7 @@ const NavBar = () => {
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
-              onClick={toggleMenu}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`inline-flex items-center justify-center p-2 rounded-lg focus:outline-none transition-colors duration-200 ${
                 scrolled ? "text-gray-700 hover:bg-gray-100" : "text-gray-700 hover:bg-white/20"
               }`}
@@ -155,9 +173,7 @@ const NavBar = () => {
       </div>
 
       {/* Mobile menu */}
-      <div
-        className={`md:hidden fixed inset-0 z-40 transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 ease-in-out`}
-      >
+      <div className={`md:hidden fixed inset-0 z-40 transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 ease-in-out`}>
         <div className="absolute right-0 top-0 bottom-0 w-full max-w-xs bg-white shadow-xl flex flex-col h-full">
           <div className="flex items-center justify-between px-4 h-16 border-b border-gray-200">
             <div className="flex items-center space-x-2">
@@ -170,7 +186,7 @@ const NavBar = () => {
               </div>
             </div>
             <button
-              onClick={toggleMenu}
+              onClick={() => setIsMenuOpen(false)}
               className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none"
             >
               <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -178,10 +194,9 @@ const NavBar = () => {
               </svg>
             </button>
           </div>
-          
           <div className="flex-1 overflow-y-auto px-4 py-6">
             <div className="space-y-3">
-              {navigation.map((item) => (
+              {navigationLinks.map((item) => (
                 <NavLink
                   key={item.name}
                   to={item.path}
@@ -197,25 +212,22 @@ const NavBar = () => {
               ))}
             </div>
           </div>
-          
           <div className="p-4 border-t border-gray-200">
             <button className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transform hover:translate-y-px transition-all duration-200">
               Get Started
             </button>
           </div>
         </div>
-        
         {/* Backdrop */}
-        <div 
-          className="absolute inset-0 bg-black bg-opacity-40"
-          onClick={() => setIsMenuOpen(false)}
-        ></div>
+        <div className="absolute inset-0 bg-black bg-opacity-40" onClick={() => setIsMenuOpen(false)}></div>
       </div>
     </nav>
   );
 };
 
 export default NavBar;
+
+
 
 //v2.2 BOLT
 // import { useState, useEffect } from "react";

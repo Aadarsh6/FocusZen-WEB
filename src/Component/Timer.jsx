@@ -102,6 +102,15 @@ const Timer = ({ initialTimer, onComplete, onReset }) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      window.postMessage({ type: "TIME_UPDATE", timeLeft }, "*"); // Update every second
+    }, 1000);
+  
+    return () => clearInterval(interval);
+  }, [timeLeft]);
+  
+
+  useEffect(() => {
     if (timeLeft >= 0) {
       localStorage.setItem("timeLeft", timeLeft);
     }

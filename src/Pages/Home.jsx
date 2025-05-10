@@ -36,12 +36,14 @@
 
 
 //v2.1 UI/UX responsive too  CLAUDE
-
 import { Link } from "react-router-dom";
 import NavBar from "../Component/NavBar";
 import { useEffect } from "react";
+import { useTheme } from "../Context";
 
 const Home = () => {
+  const { theme } = useTheme();
+
   useEffect(() => {
     localStorage.removeItem("Focus.url");
     localStorage.removeItem("Focus.time");
@@ -50,71 +52,126 @@ const Home = () => {
     localStorage.removeItem("timeLeft");
   }, []);
 
+  const cardBg =
+    theme === "light"
+      ? "transform duration-800 bg-white border-purple-200 text-gray-900"
+      : "transform duration-800 bg-gray-800 border-gray-700 text-gray-100";
+
+  const cardText = theme === "light" ? "transform duration-800 text-gray-600" : "transform duration-800 text-gray-400";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-gray-800 flex flex-col">
+    <div
+      className={`min-h-screen flex flex-col ${
+        theme === "light"
+          ? "transform duration-800 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-gray-800"
+          : "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100"
+      }`}
+    >
       <NavBar />
       <main className="flex-1 flex flex-col justify-center items-center px-6 md:px-10 py-12 w-full">
         <div className="w-full max-w-3xl text-center space-y-6 md:space-y-8">
-          <h1 className="text-4xl md:text-5xl mt-10 font-bold text-gray-900">
-            Welcome to <span className="text-purple-600">FocusZen</span>
+          <h1 className="text-4xl md:text-5xl mt-10 font-bold">
+            Welcome to{" "}  
+            {/*{" "} jsut to add some space */}
+            <span
+              className={`${
+                theme === "light" ? "transform duration-800 text-purple-600" : "transform duration-800 text-purple-400"
+              }`}
+            >
+              FocusZen
+            </span>
           </h1>
-          
-          <p className="text-gray-700 text-lg md:text-xl max-w-2xl mx-auto">
+
+          <p
+            className={`text-lg md:text-xl max-w-2xl mx-auto ${
+              theme === "light" ? "transform duration-800 text-gray-700" : "transform duration-800 text-gray-300"
+            }`}
+          >
             Focus on what matters and achieve your goals with ease.
           </p>
-          
+
           <div className="mt-8">
-            <Link 
-              to="/focusMode" 
+            <Link
+              to="/focusMode"
               className="inline-flex items-center transform hover:scale-105 justify-center px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-medium rounded-lg shadow-lg hover:from-purple-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-200 text-lg"
             >
               Start Session
             </Link>
           </div>
         </div>
-        
+
         <div className="mt-12 md:mt-16 w-full max-w-4xl px-4">
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl shadow-md p-6 border border-purple-200 hover:shadow-lg transition-shadow duration-300">
-              <div className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
+            {[ // Using map to avoid duplication if you prefer.
+              {
+                title: "Minimize Distractions",
+                desc: "Block out noise and stay focused on the task at hand.",
+                icon: (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  />
+                ),
+              },
+              {
+                title: "Track Progress",
+                desc:
+                  "Monitor your focus sessions and see your productivity improve over time.",
+                icon: (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                ),
+              },
+              {
+                title: "Achieve Goals",
+                desc:
+                  "Turn your focus into achievements with consistent practice.",
+                icon: (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                ),
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className={`${cardBg} rounded-xl shadow-md p-6 border hover:shadow-lg transition-shadow duration-300`}
+              >
+                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                  <svg
+                    className="h-6 w-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    {item.icon}
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+                <p className={`${cardText}`}>{item.desc}</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Minimize Distractions</h3>
-              <p className="text-gray-600">
-                Block out noise and stay focused on the task at hand.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl shadow-md p-6 border border-purple-200 hover:shadow-lg transition-shadow duration-300">
-              <div className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Track Progress</h3>
-              <p className="text-gray-600">
-                Monitor your focus sessions and see your productivity improve over time.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl shadow-md p-6 border border-purple-200 hover:shadow-lg transition-shadow duration-300">
-              <div className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Achieve Goals</h3>
-              <p className="text-gray-600">
-                Turn your focus into achievements with consistent practice.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </main>
       <footer className="py-6 text-center text-gray-500">
-        <p className="text-sm">© 2025 FocusZen. All rights reserved.</p>
+        <p
+          className={`text-sm ${
+            theme === "light" ? "transform duration-800 text-gray-500" : "transform duration-800 text-gray-400"
+          }`}
+        >
+          © 2025 FocusZen. All rights reserved.
+        </p>
       </footer>
     </div>
   );
