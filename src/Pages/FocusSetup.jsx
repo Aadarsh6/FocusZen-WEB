@@ -260,7 +260,7 @@
 
 //v2.2
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Clock, Link, X, Plus, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../Component/NavBar";
@@ -271,6 +271,16 @@ const FocusSetup = () => {
   const [time, setTime] = useState(10);
   const [error, setError] = useState("");
   const [customTimeActive, setCustomTimeActive] = useState(false);
+
+  const errorRef = useRef(null)
+
+  useEffect(()=>{
+    if(error && errorRef.current){
+      errorRef.current.focus()
+      errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" },0);
+    }
+  }, [error])
+
   // const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState(false);
   // const [theme, setTheme] = useState(""); // default, nature, sunset, ocean
 
@@ -325,7 +335,7 @@ const FocusSetup = () => {
     navigate("/focus")
   };
 
-  const timeOptions = [10, 25, 30, 45, 60, 90, 120];
+  const timeOptions = [30, 45, 60, 90, 120];
 
   // const themes = [
   //   { id: "default", name: "Nature Calm", class: "from-emerald-700 to-teal-900" },
@@ -342,7 +352,8 @@ const FocusSetup = () => {
   return (
     <div>
       <NavBar/>
-    <div className={`min-h-screen pt-24 bg-gradient-to-br bg-gray-600 transition-colors duration-500 flex items-center justify-center p-2`}>
+      <div className="min-h-screen pt-24 bg-gradient-to-br from-slate-800 via-gray-700 to-gray-900 transition-colors duration-500 flex items-center justify-center p-2 overflow-auto">
+
         {/* <div className="flex justify-start mb-6">
           <div className="bg-white/10 backdrop-blur-md rounded-full p-3 shadow-lg">
             <Brain size={20} className="text-white" />
@@ -492,8 +503,12 @@ const FocusSetup = () => {
             
             {/* Error message */}
             {error && (
-              <div className="bg-red-500/20 border border-red-500/30 text-white px-4 py-2 rounded-lg flex items-center">
+              <div className="bg-red-500/20 border border-red-500/30 text-white px-4 py-2 rounded-lg flex items-center"
+              ref={errorRef}
+              tabIndex={-1}
+              >
                 <X
+                
                 role="button"
                 aria-label="Dismiss error"
                 onClick={()=>setError("")} 
