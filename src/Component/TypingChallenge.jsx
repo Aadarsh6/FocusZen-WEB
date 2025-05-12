@@ -30,9 +30,9 @@ const TypingChallenge = () => {
   }
 
   const exitPhrases = [
-    "By typing this, I admit that short-term comfort is more important to me than long-term success.",
+    "By typing this, I admit that short term comfort is more important to me than long term success.",
     "I am choosing distraction over discipline, and I accept the consequences of wasted potential.",
-    "This moment defines me — and I am choosing to give up rather than grow.",
+    "This moment defines me and I am choosing to give up rather than grow.",
     "I understand that I'm trading progress for the same distractions I claimed to avoid.",
     "I am willingly breaking a promise to myself, knowing it weakens my self-respect.",
     "I had a chance to become stronger, but I’m letting discomfort win instead.",
@@ -50,17 +50,11 @@ const TypingChallenge = () => {
     e.preventDefault();
 
     
-    if(input === requirePhrase){ 
+    if(input.trim() === requirePhrase){ 
         setError('')
         onSuccess();
         setInput("") //clear input after sucess
         
-    }else if (input.trim() === requirePhrase) {
-      setError("");
-      onSuccess();
-      setInput("") //clear input after sucess
-      
-
     }else if(input === ""){
         setError("Enter the character")
         setToggelError(prev => prev + 1)
@@ -99,6 +93,9 @@ const TypingChallenge = () => {
             placeholder="Type here to Exit Focus Mode. . . . ."
             className="w-full p-2 border rounded-md mt-2"
             value={input}
+            onCopy={(e)=>e.preventDefault()}
+            onPaste={(e)=>e.preventDefault()}
+            onCut={(e)=>e.preventDefault()}
             onChange={(e) => setInput(e.target.value)}
           />
           {error && (
@@ -107,8 +104,7 @@ const TypingChallenge = () => {
           <div className="flex w-full gap-2 justify-center mt-2">         
            <button className="bg-green-700 text-white w-1/4 mt-5 py-2 rounded-md hover:bg-green-500 transition duration-200"
            type="submit"
-           onSubmit={()=> setError("")}
-
+           
            >Submit</button>
            
            <Link className="bg-green-700 text-white w-1/4 mt-5 py-2 text-center rounded-md hover:bg-emerald-500 transition duration-200"
