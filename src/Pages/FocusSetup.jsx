@@ -272,6 +272,10 @@ const FocusSetup = () => {
   const [error, setError] = useState("");
   const [customTimeActive, setCustomTimeActive] = useState(false);
 
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
+const [showSuggestion, setShowSuggestion] = useState(false);
+
+
   const errorRef = useRef(null)
 
   useEffect(()=>{
@@ -288,6 +292,15 @@ const FocusSetup = () => {
     const newUrls = [...urls];
     newUrls[index] = value;
     setUrls(newUrls);
+
+    if (value && !value.includes(".") && !value.endsWith(".com")) {
+      setActiveSuggestionIndex(index);
+      setShowSuggestion(true);
+    } else {
+      setShowSuggestion(false);
+    }
+
+
   };
 
   const addUrlField = () => {
@@ -366,35 +379,7 @@ const FocusSetup = () => {
           <div className="px-8 pt-8 pb-4 flex justify-between items-center">
             <h1 className="text-3xl font-bold text-white">Focus Session</h1>
             
-            {/* <div className="relative">
-              <button 
-                type="button"
-                className="bg-white/20 hover:bg-white/40 transition text-white text-sm py-2 px-3 rounded-lg flex items-center space-x-2"
-                onClick={() => setIsTimeDropdownOpen(!isTimeDropdownOpen)}
-              >
-                <span>Theme</span>
-                <ChevronDown size={16} />
-              </button>
-              
-              {isTimeDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white/80 backdrop-blur-md rounded-lg shadow-xl z-10 overflow-hidden">
-                  {themes.map(t => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      className={`w-full text-left px-4 py-3 text-gray-700 font-semibold hover:bg-black/30 rounded-md transition flex items-center space-x-2 ${theme === t.id ? 'bg-white/20' : ''}`}
-                      onClick={() => {
-                        setTheme(t.id);
-                        setIsTimeDropdownOpen(false);
-                      }}
-                    >
-                      <div className={`w-4 h-4 rounded-full bg-gradient-to-br ${t.class}`}></div>
-                      <span>{t.name}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div> */}
+            
           </div>
           
           <p className="px-8 text-white/70 text-sm pb-6">
@@ -419,7 +404,73 @@ const FocusSetup = () => {
                         placeholder={`Website ${index + 1} (e.g., example.com)`}
                         value={url}
                         onChange={(e) => handleUrl(index, e.target.value)}
+                        onFocus={() => {
+                          if (url && !url.includes(".") && !url.endsWith(".com")) {
+                            setActiveSuggestionIndex(index);
+                            setShowSuggestion(true);
+                          }
+                        }}
+                        onBlur={() => {
+                          setTimeout(() => setShowSuggestion(false), 100); // delay to allow click
+                        }}
+                          onKeyDown={(e) => {
+                          const isSuggesting = showSuggestion && activeSuggestionIndex === index && !url.includes(".");
+                          const isValidUrl = url.includes(".");
+                            if (
+                              e.key === "Tab"  && isSuggesting){
+                              e.preventDefault()
+                              handleUrl(index, url + ".com");
+                              setShowSuggestion(false)
+                            }
+
+                            if (e.key === "Enter"){
+                              if(isSuggesting){
+                                e.preventDefault(); // prevent moving to next input
+                              handleUrl(index, url + ".com");
+                              setShowSuggestion(false);
+                            }else if(isValidUrl){
+                              const nextEmptyIndex = urls.findIndex((u, i) => u === "" && i !== index);
+                              if (nextEmptyIndex !== -1){
+                                document.querySelectorAll("input")[nextEmptyIndex].focus();
+                              } else if (urls.length < 3) {
+                                addUrlField();
+                                setTimeout(() => {
+                                  const inputs = document.querySelectorAll("input");
+                                  inputs[inputs.length - 1]?.focus();
+                                }, 50);
+                            }
+                        }
+                      }}}
                       />
+{showSuggestion && activeSuggestionIndex === index && !url.includes(".") && (
+ <div className="absolute top-full mt-1 left-0 bg-white/90 text-gray-900 text-sm px-4 py-2 rounded-lg shadow-lg z-10 flex items-center justify-between w-full backdrop-blur-sm border border-gray-300 animate-fade-in">
+ <span>
+   Did you mean <span className="font-semibold text-blue-600">{url}.com</span>?
+ </span>
+ <span className="ml-4 text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full border border-gray-300 shadow-sm">
+   Tab
+ </span>
+</div>
+
+)}
+
+{/* 
+{showSuggestion && activeSuggestionIndex === index && (
+  <div
+    className="absolute z-10 mt-1 left-0 right-0 bg-black/30 text-white p-2 rounded shadow cursor-pointer text-sm"
+    onClick={() => {
+      handleUrl(index, url + ".com");
+      setShowSuggestion(false);
+    }}
+  >
+    {url}.com
+  </div>
+)} */}
+
+
+
+
+
                     </div>
                     
                     <button
@@ -493,6 +544,13 @@ const FocusSetup = () => {
                       setCustomTimeActive(true);
                     }}
                     onFocus={() => setCustomTimeActive(true)}
+                    onKeyDown={(e) => {
+                      // If Enter key is pressed, submit the form
+                      if (e.key === "Enter") {
+                        e.preventDefault(); // Prevents form from submitting multiple times
+                        handleSubmit(e); // Trigger form submission
+                      }
+                    }}
                   />
                   <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/70">
                     minutes

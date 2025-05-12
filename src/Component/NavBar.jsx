@@ -102,27 +102,7 @@ const NavBar = () => {
             </NavLink>
           </div>
 
-          {/* Mode Button */}
-          {/* <div >
-          <button
-            onClick={toggleMode}
-            className="ml-4 px-4 py-2 text-sm rounded-full font-medium transition-colors duration-200 
-            bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center space-x-2"
-          >
-            {theme === 'light' ? (
-              <>
-                <Moon className="w-4 h-4" />
-                <span>Dark Mode</span>
-              </>
-            ) : (
-              <>
-                <Sun className="w-4 h-4" />
-                <span>Light Mode</span>
-              </>
-            )}
-          </button>
-          </div> */}
-          {/* Desktop Navigation Links */}
+          
           <div className="hidden md:flex items-center space-x-1">
             {navigationLinks.map((item) => (
               <NavLink
@@ -144,23 +124,19 @@ const NavBar = () => {
 
           {/* Action Button */}
           <div className="hidden md:flex items-center">
-            {/* <button className="ml-6 px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-full shadow-md hover:shadow-lg transform hover:translate-y-px transition-all duration-200">
-              Get Started
-            </button> */}
+            
           <button
             onClick={toggleMode}
-            className="ml-4 px-4 py-2 text-sm rounded-full font-medium transition-colors duration-200 
+            className="ml-4 px-2 py-1 text-sm rounded-full font-medium transition-colors duration-200 
             bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center space-x-2"
           >
             {theme === 'light' ? (
               <>
                 <Moon className="w-4 h-4" />
-                <span>Dark Mode</span>
               </>
             ) : (
               <>
                 <Sun className="w-4 h-4" />
-                <span>Light Mode</span>
               </>
             )}
           </button>
