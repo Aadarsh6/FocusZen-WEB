@@ -25,8 +25,18 @@ const TypingChallenge = () => {
       return () => clearTimeout(timeout)
   },[toggelError])
 
+
+  // const handleReset =() =>{  // ADDED OnRest HERE CREATED A SPECIAL FN
+    
+  // };
+
+
   const onSuccess = () =>{
-    navigate("/ ")
+    localStorage.removeItem("timeLeft");
+    window.postMessage({
+      type: "EndFocusSession"
+    }, "*")
+    navigate("/")
   }
 
   const exitPhrases = [

@@ -81,8 +81,8 @@ const NavBar = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 
         ${theme === 'light'
           ? scrolled
-            ? 'bg-slate-200 text-gray-800 shadow-xl'
-            : 'bg-white text-gray-800'
+            ? 'bg-slate-100 text-gray-800 shadow-xl'
+            : 'bg-white/80 shadow-md text-gray-800'
           : scrolled
             ? 'bg-gray-900 text-white shadow-xl'
             : 'bg-gray-800 text-white'}`}
