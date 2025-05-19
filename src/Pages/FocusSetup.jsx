@@ -267,12 +267,12 @@ import NavBar from "../Component/NavBar";
 
 const FocusSetup = () => {
   const navigate = useNavigate()
-  const [urls, setUrls] = useState(["", "", ""]);
+  const [urls, setUrls] = useState([""]);
   const [time, setTime] = useState(10);
   const [error, setError] = useState("");
   const [customTimeActive, setCustomTimeActive] = useState(false);
 
-  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
+const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
 const [showSuggestion, setShowSuggestion] = useState(false);
 
 
@@ -350,28 +350,10 @@ const [showSuggestion, setShowSuggestion] = useState(false);
 
   const timeOptions = [30, 45, 60, 90, 120];
 
-  // const themes = [
-  //   { id: "default", name: "Nature Calm", class: "from-emerald-700 to-teal-900" },
-  //   { id: "sunset", name: "Sunset", class: "from-orange-600 to-rose-800" },
-  //   { id: "ocean", name: "Ocean", class: "from-blue-700 to-cyan-900" },
-  //   { id: "nature", name: "Deep Focus", class: "from-indigo-800 to-purple-900" },
-  // ];
-
-  // const getThemeClasses = () => {
-  //   const selectedTheme = themes.find(t => t.id === theme);
-  //   return selectedTheme ? selectedTheme.class : themes[0].class;
-  // };
-
   return (
     <div>
       <NavBar/>
       <div className="min-h-screen pt-24 bg-gradient-to-br from-slate-800 via-gray-700 to-gray-900 transition-colors duration-500 flex items-center justify-center p-2 overflow-auto">
-
-        {/* <div className="flex justify-start mb-6">
-          <div className="bg-white/10 backdrop-blur-md rounded-full p-3 shadow-lg">
-            <Brain size={20} className="text-white" />
-          </div>
-        </div> */}
       <div className="w-full max-w-lg">
         
         <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden">
@@ -454,34 +436,18 @@ const [showSuggestion, setShowSuggestion] = useState(false);
 
 )}
 
-{/* 
-{showSuggestion && activeSuggestionIndex === index && (
-  <div
-    className="absolute z-10 mt-1 left-0 right-0 bg-black/30 text-white p-2 rounded shadow cursor-pointer text-sm"
-    onClick={() => {
-      handleUrl(index, url + ".com");
-      setShowSuggestion(false);
-    }}
-  >
-    {url}.com
-  </div>
-)} */}
 
-
-
-
-
+                      </div>
+                      
+                      <button
+                        type="button"
+                        onClick={() => removeUrlField(index)}
+                        className="ml-2 p-2 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-all"
+                      >
+                        <X size={18} />
+                      </button>
                     </div>
-                    
-                    <button
-                      type="button"
-                      onClick={() => removeUrlField(index)}
-                      className="ml-2 p-2 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-all"
-                    >
-                      <X size={18} />
-                    </button>
-                  </div>
-                ))}
+                  ))}
                 
                 <button
                   type="button"

@@ -80,6 +80,10 @@ const Focus = () => {
     window.postMessage({
       type: "EndFocusSession"
     }, "*");
+
+    const audio = new Audio("/sound.wav");
+    audio.play().catch(err => console.log("🔇 Audio play error:", err));
+
     navigate("/success");
   };
 
