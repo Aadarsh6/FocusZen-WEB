@@ -1,38 +1,27 @@
-
-
-//v2.1 UI/UX responsive too
-import { NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Moon, Sun } from 'lucide-react';  // Optional icons for dark/light mode toggle
+import { NavLink, useLocation } from "react-router-dom";
 import { useTheme } from "../Context";
-// import { useTheme } from "../Context/themeContext.js";  // Ensure you are importing the correct context
+import { motion, AnimatePresence } from "framer-motion";
+import { Sun, Moon, Menu, X } from 'lucide-react';
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("/");
-
-  const { toggleMode, theme } = useTheme();  // Added theme here
-
+  const [hasScrolled, setHasScrolled] = useState(false);
+  const { theme, toggleMode } = useTheme();
   const location = useLocation();
 
-  // Handle scroll effects to change navbar appearance
+  // Effect for scroll detection
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setHasScrolled(window.scrollY > 10);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Update active section when location changes
+  // Close mobile menu on route change
   useEffect(() => {
-    setActiveSection(location.pathname);
+    setIsMenuOpen(false);
   }, [location.pathname]);
 
   const navigationLinks = [
@@ -42,183 +31,123 @@ const NavBar = () => {
     { name: "Settings", path: "/settings" }
   ];
 
+  // --- Dynamic Style Variables for cleaner JSX ---
+  const navStyle = hasScrolled
+    ? (theme === 'light'
+      ? "bg-white/80 backdrop-blur-lg border-b border-slate-200/70"
+      : "bg-gray-950/80 backdrop-blur-lg border-b border-white/10")
+    : "bg-transparent border-b border-transparent";
+
+  const linkStyle = `relative px-3 py-2 text-sm font-medium transition-colors duration-300 ${
+    theme === 'light' ? 'text-gray-700 hover:text-cyan-600' : 'text-gray-300 hover:text-cyan-400'
+  }`;
+
+  const activeLinkStyle = theme === 'light' ? 'text-cyan-600' : 'text-cyan-400';
+  
+  const accentGradient = "from-green-400 via-cyan-400 to-purple-500";
 
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 
-        ${theme === 'light'
-          ? scrolled
-            ? 'bg-slate-100 text-gray-800 shadow-xl'
-            : 'bg-white/80 shadow-md text-gray-800'
-          : scrolled
-            ? 'bg-gray-900 text-white shadow-xl'
-            : 'bg-gray-800 text-white'}`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
+    <>
+      <nav 
+        role="navigation"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navStyle}`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            {/* --- Logo --- */}
             <NavLink to="/" className="flex items-center space-x-2 group">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300">
-                <span className="text-white font-bold text-lg">F</span>
-              </div>
-              <div className="flex items-baseline">
-                <span className={`text-xl font-bold transition-colors duration-300 ${theme === "dark" ? "transform duration-500 text-white" : scrolled ? "text-gray-800" : "text-gray-800"}`}>Focus</span>
-                <span className={`text-xl font-bold transition-colors duration-300 ${scrolled ? "text-purple-600" : "text-purple-500"}`}>Zen</span>
-              </div>
+              <span className={`text-2xl font-extrabold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+                Focus
+              </span>
+              <span className={`text-2xl font-extrabold bg-gradient-to-r ${accentGradient} bg-clip-text text-transparent`}>
+                Zen
+              </span>
             </NavLink>
-          </div>
 
-          
-          <div className="hidden md:flex items-center space-x-1">
-            {navigationLinks.map((item) => (
-              <NavLink
-                key={item.name}
-                to={item.path}
-                className={`px-4 py-2 mx-1 rounded-full text-sm font-medium transition-all duration-200 ${
-                  item.path === activeSection
-                    ? "text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-md"
-                    : `${
-                        theme === "dark" ? "transform duration-500 text-white" : scrolled ? "text-gray-700" : "text-gray-700"
-                      } hover:bg-purple-50 hover:text-purple-700`}
-                `}
-                
+            {/* --- Desktop Navigation --- */}
+            <div className="hidden md:flex items-center space-x-2">
+              {navigationLinks.map((item) => (
+                <NavLink
+                  key={item.name}
+                  to={item.path}
+                  className={({ isActive }) => `${linkStyle} ${isActive ? activeLinkStyle : ''}`}
+                >
+                  {item.path === location.pathname && (
+                    <motion.div
+                      layoutId="underline"
+                      className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${accentGradient}`}
+                    />
+                  )}
+                  {item.name}
+                </NavLink>
+              ))}
+            </div>
+
+            {/* --- Actions & Mobile Menu Toggle --- */}
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={toggleMode}
+                aria-label="Toggle theme"
+                className={`p-2 rounded-full transition-colors duration-300 ${theme === 'light' ? 'hover:bg-slate-200' : 'hover:bg-white/10'}`}
               >
-                {item.name}
-              </NavLink>
-            ))}
-          </div>
-
-          {/* Action Button */}
-          <div className="hidden md:flex items-center">
-            
-          <button
-            onClick={toggleMode}
-            className="ml-4 px-2 py-1 text-sm rounded-full font-medium transition-colors duration-200 
-            bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center space-x-2"
-          >
-            {theme === 'light' ? (
-              <>
-                <Moon className="w-4 h-4" />
-              </>
-            ) : (
-              <>
-                <Sun className="w-4 h-4" />
-              </>
-            )}
-          </button>
-
-
-
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`inline-flex items-center justify-center p-2 rounded-lg focus:outline-none transition-colors duration-200 ${
-                scrolled ? "text-gray-700 hover:bg-gray-100" : "text-gray-700 hover:bg-white/20"
-              }`}
-              aria-expanded={isMenuOpen}
-            >
-              <span className="sr-only">Open main menu</span>
-              {!isMenuOpen ? (
-                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              ) : (
-                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              )}
-            </button>
+                {theme === 'light' ? <Moon size={20} className="text-gray-700" /> : <Sun size={20} className="text-yellow-400" />}
+              </button>
+              
+              <div className="md:hidden">
+                <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Open main menu" aria-expanded={isMenuOpen}>
+                  {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </nav>
 
-     
-{/* Mobile Menu Panel */}
-{isMenuOpen && (
-  <div className="md:hidden fixed inset-0 z-50 flex">
-    {/* Overlay */}
-    <div
-      className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-      onClick={() => setIsMenuOpen(false)}
-    />
-
-    {/* Slide-in Menu Panel */}
-    <div
-      className={`ml-auto w-11/12 max-w-sm h-full flex flex-col z-50 transform transition-transform duration-300
-      ${theme === 'dark' ? "bg-gray-900 text-white" : "bg-white text-gray-900"}
-      shadow-xl rounded-l-2xl`}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 h-16 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-lg flex items-center justify-center text-white font-bold shadow">
-            F
-          </div>
-          <span className="text-lg font-semibold">FocusZen</span>
-        </div>
-        <button
-          onClick={() => setIsMenuOpen(false)}
-          className="p-2 rounded-md hover:text-red-500"
-          aria-label="Close Menu"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Navigation Links */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-3">
-        {navigationLinks.map((item) => (
-          <NavLink
-            key={item.name}
-            to={item.path}
+      {/* --- Mobile Menu Panel (with animation) --- */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
             onClick={() => setIsMenuOpen(false)}
-            className={`block px-4 py-3 rounded-xl text-base font-medium transition-all
-              ${
-                item.path === activeSection
-                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md"
-                  : theme === "dark"
-                  ? "hover:bg-gray-700 text-white"
-                  : "hover:bg-purple-100 text-gray-900"
-              }`}
           >
-            {item.name}
-          </NavLink>
-        ))}
-      </div>
-
-      {/* Theme Toggle Button */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        <button
-          onClick={toggleMode}
-          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md"
-        >
-          {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          <span>{theme === 'dark' ? "Light Mode" : "Dark Mode"}</span>
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-
-    </nav>
+            <motion.div
+              initial={{ y: "-100%" }}
+              animate={{ y: "0%" }}
+              exit={{ y: "-100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className={`absolute top-0 left-0 right-0 pt-20 shadow-xl ${theme === 'light' ? 'bg-white' : 'bg-gray-900'}`}
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside menu
+            >
+              <div className="flex flex-col items-center space-y-6 p-8">
+                {navigationLinks.map((item, index) => (
+                  <motion.div
+                    key={item.name}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + index * 0.05 }}
+                  >
+                    <NavLink
+                      to={item.path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={({ isActive }) => `text-xl font-semibold transition-colors duration-300 ${
+                        isActive ? activeLinkStyle : theme === 'light' ? 'text-gray-800' : 'text-gray-200'
+                      }`}
+                    >
+                      {item.name}
+                    </NavLink>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
 export default NavBar;
-
-
-
