@@ -1,45 +1,31 @@
-// import { Link } from "react-router-dom";
-// import NavBar from "../Component/NavBar";
-// import { useEffect } from "react";
-
-// const Home = () => {
-
-//    useEffect(()=>{
-//       localStorage.removeItem("Focus.url")
-//       localStorage.removeItem("Focus.time")
-//     },[])
-  
-
-//   return (
-//     <>
-//       <NavBar />
-//       <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-r from-[#f3e5f5] via-[#d1c4e9] to-[#f8bbd0] text-gray-800">
-//         <h1 className="text-5xl font-extrabold text-gray-800 mb-6 drop-shadow-md">
-//           Welcome to FocusZen
-//         </h1>
-//         <p className="text-lg text-gray-700 font-light max-w-lg text-center mb-8">
-//           Focus on what matters and achieve your goals with ease. Begin your journey with FocusZen now!
-//         </p>
-//         <Link 
-//           to="/focusMode" 
-//           className="bg-gradient-to-r from-[#8e24aa] to-[#ff4081] px-8 py-4 text-2xl font-semibold text-white rounded-lg transform hover:scale-105 hover:shadow-md transition duration-300 ease-in-out"
-//         >
-//           Start Session
-//         </Link>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Home;
-
-
-
-//v2.1 UI/UX responsive too  CLAUDE
 import { Link } from "react-router-dom";
 import NavBar from "../Component/NavBar";
 import { useEffect } from "react";
 import { useTheme } from "../Context";
+
+// --- Custom SVG Icons for a more polished look ---
+const FocusIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <circle cx="12" cy="12" r="6"></circle>
+    <circle cx="12" cy="12" r="2"></circle>
+  </svg>
+);
+
+const AnalyticsIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 3v18h18"></path>
+    <path d="m19 9-5 5-4-4-3 3"></path>
+  </svg>
+);
+
+const MasteryIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+    <path d="m9 12 2 2 4-4"></path>
+  </svg>
+);
+
 
 const Home = () => {
   const { theme } = useTheme();
@@ -52,127 +38,131 @@ const Home = () => {
     localStorage.removeItem("timeLeft");
   }, []);
 
-  const cardBg =
-    theme === "light"
-      ? "transform duration-800 bg-white border-purple-200 text-gray-900"
-      : "transform duration-800 bg-gray-800 border-gray-700 text-gray-100";
-
-  const cardText = theme === "light" ? "transform duration-800 text-gray-600" : "transform duration-800 text-gray-400";
+  // --- Aurora Theme Color Palette ---
+  const bgClass = theme === "light" 
+    ? "bg-slate-50" 
+    : "bg-gray-950 text-white";
+    
+  const textPrimary = theme === "light" ? "text-gray-900" : "text-gray-100";
+  const textSecondary = theme === "light" ? "text-gray-600" : "text-gray-400";
+  const accentGradient = "bg-gradient-to-r from-green-400 via-cyan-400 to-purple-500";
+  
+  const features = [
+    {
+      title: "Undisturbed Focus",
+      desc: "Create a sanctuary for your mind. Our tools help you silence the noise and dive deep into your tasks.",
+      icon: <FocusIcon />,
+      accentClass: "text-green-500",
+    },
+    {
+      title: "Insightful Analytics",
+      desc: "Understand your workflow. Track your sessions to discover your peak productivity hours and habits.",
+      icon: <AnalyticsIcon />,
+      accentClass: "text-cyan-400",
+    },
+    {
+      title: "Achieve Mastery",
+      desc: "Turn consistent effort into tangible results. Set milestones and watch your goals become reality.",
+      icon: <MasteryIcon />,
+      accentClass: "text-purple-500",
+    }
+  ];
 
   return (
-    <div
-      className={`min-h-screen flex flex-col ${
-        theme === "light"
-          ? "transform duration-800 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-gray-800"
-          : "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100"
-      }`}
-    >
+    <div className={`min-h-screen ${bgClass} font-sans relative overflow-hidden transition-colors duration-500`}>
+      {/* Animated Aurora Background - only in dark mode */}
+      {theme === 'dark' && (
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[80vh] bg-gradient-to-tr from-green-500/20 via-cyan-500/0 to-purple-500/20 blur-3xl opacity-50 animate-aurora-pulse"></div>
+        </div>
+      )}
+      
       <NavBar />
-      <main className="flex-1 flex flex-col justify-center items-center px-6 md:px-10 py-12 w-full">
-        <div className="w-full max-w-3xl text-center space-y-6 md:space-y-8">
-          <h1 className="text-4xl md:text-5xl mt-10 font-bold">
-            Welcome to{" "}  
-            {/*{" "} jsut to add some space */}
-            <span
-              className={`${
-                theme === "light" ? "transform duration-800 text-purple-600" : "transform duration-800 text-purple-400"
-              }`}
-            >
-              FocusZen
-            </span>
-          </h1>
+      
+      <main className="relative z-10 flex flex-col items-center justify-center px-6 py-24 sm:py-32">
+        {/* --- Hero Section --- */}
+        <div className="text-center max-w-4xl mx-auto">
+          <div className="animate-fadeInUp" style={{animationDelay: '100ms'}}>
+            <h1 className={`text-5xl md:text-7xl font-extrabold mb-6 ${textPrimary} tracking-tight`}>
+              Find Your Flow.
+              <br />
+              <span className={`${accentGradient} bg-clip-text text-transparent`}>
+                Master Your Mind.
+              </span>
+            </h1>
+          </div>
+          
+          <div className="animate-fadeInUp" style={{animationDelay: '300ms'}}>
+            <p className={`text-lg md:text-xl ${textSecondary} mb-12 max-w-2xl mx-auto`}>
+              FocusZen is your personal sanctuary for deep work, helping you eliminate distractions and unlock peak performance.
+            </p>
+          </div>
 
-          <p
-            className={`text-lg md:text-xl max-w-2xl mx-auto ${
-              theme === "light" ? "transform duration-800 text-gray-700" : "transform duration-800 text-gray-300"
-            }`}
-          >
-            Focus on what matters and achieve your goals with ease.
-          </p>
-
-          <div className="mt-8">
+          <div className="animate-fadeInUp" style={{animationDelay: '500ms'}}>
             <Link
               to="/focusMode"
-              className="inline-flex items-center transform hover:scale-105 justify-center px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-medium rounded-lg shadow-lg hover:from-purple-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-200 text-lg"
+              className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-gray-900 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-cyan-500/50"
             >
-              Start Session
+               <span className={`absolute -inset-0.5 rounded-full ${accentGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur`}></span>
+               <span className="relative">Start Your Session</span>
             </Link>
           </div>
         </div>
 
-        <div className="mt-12 md:mt-16 w-full max-w-4xl px-4">
-          <div className="grid md:grid-cols-3 gap-6">
-            {[ // Using map to avoid duplication if you prefer.
-              {
-                title: "Minimize Distractions",
-                desc: "Block out noise and stay focused on the task at hand.",
-                icon: (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                ),
-              },
-              {
-                title: "Track Progress",
-                desc:
-                  "Monitor your focus sessions and see your productivity improve over time.",
-                icon: (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                  />
-                ),
-              },
-              {
-                title: "Achieve Goals",
-                desc:
-                  "Turn your focus into achievements with consistent practice.",
-                icon: (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                ),
-              },
-            ].map((item, index) => (
+        {/* --- Features Section --- */}
+        <div className="w-full max-w-5xl mx-auto mt-32">
+          <div className="grid md:grid-cols-3 gap-10">
+            {features.map((feature, index) => (
               <div
                 key={index}
-                className={`${cardBg} rounded-xl shadow-md p-6 border hover:shadow-lg transition-shadow duration-300`}
+                className="group text-center animate-fadeInUp"
+                style={{ animationDelay: `${700 + index * 200}ms` }}
               >
-                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                  <svg
-                    className="h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    {item.icon}
-                  </svg>
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 ${feature.accentClass} bg-white/5 backdrop-blur-sm border border-white/10 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300`}>
+                  {feature.icon}
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                <p className={`${cardText}`}>{item.desc}</p>
+                
+                <h3 className={`text-2xl font-bold mb-3 ${textPrimary}`}>{feature.title}</h3>
+                <p className={`${textSecondary}`}>{feature.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </main>
-      <footer className="py-6 text-center text-gray-500">
-        <p
-          className={`text-sm ${
-            theme === "light" ? "transform duration-800 text-gray-500" : "transform duration-800 text-gray-400"
-          }`}
-        >
-          © 2025 FocusZen. All rights reserved.
+
+      <footer className="relative z-10 py-10 text-center">
+        <p className={`text-sm ${textSecondary}`}>
+          © 2025 FocusZen. Designed for clarity and calm.
         </p>
       </footer>
+
+      {/* --- Keyframes for Animations --- */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        
+        .font-sans {
+          font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes aurora-pulse {
+          0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.4; }
+          50% { transform: translateX(-50%) scale(1.1); opacity: 0.6; }
+        }
+        
+        .animate-fadeInUp {
+          animation: fadeInUp 0.7s ease-out forwards;
+          opacity: 0; /* Start hidden */
+        }
+        
+        .animate-aurora-pulse {
+          animation: aurora-pulse 15s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 };
@@ -181,125 +171,3 @@ export default Home;
 
 
 
-
-// v2.2  BOLT
-// import { Link } from "react-router-dom";
-// import { useEffect } from "react";
-// import NavBar from "../Component/NavBar";
-// import { ArrowRight, Brain, Target, Clock, Sparkles, ChevronRight } from "lucide-react";
-
-// const Home = () => {
-//   useEffect(() => {
-//     localStorage.removeItem("Focus.url");
-//     localStorage.removeItem("Focus.time");
-//     localStorage.removeItem("Focus.EndTime");
-//     localStorage.removeItem("Focus.StartTime");
-//     localStorage.removeItem("timeLeft");
-//   }, []);
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50">
-//       <NavBar />
-      
-//       {/* Hero Section */}
-//       <section className="relative pt-32 lg:pt-40 pb-24 overflow-hidden">
-//         <div className="absolute inset-0 z-0">
-//           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-200/20 rounded-full blur-3xl"></div>
-//           <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-200/20 rounded-full blur-3xl"></div>
-//           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pink-100/20 rounded-full blur-3xl"></div>
-//         </div>
-        
-//         <div className="container mx-auto px-4 relative z-10">
-//           <div className="max-w-4xl mx-auto text-center">
-//             <div className="inline-flex items-center px-4 py-2 bg-white/80 rounded-full mb-8 backdrop-blur-sm border border-purple-100/50 shadow-sm">
-//               <Sparkles className="w-4 h-4 text-purple-600 mr-2" />
-//               <span className="text-sm font-medium bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-//                 Discover the Power of Focus
-//               </span>
-//             </div>
-            
-//             <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-//               Achieve More with
-//               <span className="block mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-//                 FocusZen
-//               </span>
-//             </h1>
-            
-//             <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-//               Transform your productivity and reach your goals with our scientifically-designed focus enhancement platform.
-//             </p>
-            
-//             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-//               <Link 
-//                 to="/focusMode"
-//                 className="group flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
-//               >
-//                 Start Focusing Now
-//                 <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-//               </Link>
-//               <a 
-//                 href="#features"
-//                 className="group px-8 py-4 bg-white/80 backdrop-blur-sm text-gray-700 font-medium rounded-xl border border-purple-100 hover:bg-white/95 transition-all duration-300"
-//               >
-//                 Learn More
-//               </a>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-      
-//       {/* Features Section */}
-//       <section id="features" className="py-24 relative z-10">
-//         <div className="container mx-auto px-4">
-//           <div className="text-center mb-16">
-//             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-//               Why Choose <span className="text-purple-600">FocusZen</span>?
-//             </h2>
-//             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-//               Experience a new level of productivity with our powerful features
-//             </p>
-//           </div>
-          
-//           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-//             <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-100 hover:-translate-y-1">
-//               <div className="bg-gradient-to-br from-purple-500 to-indigo-600 w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
-//                 <Brain className="w-8 h-8 text-white" />
-//               </div>
-//               <h3 className="text-xl font-bold text-gray-900 mb-4">Deep Focus Mode</h3>
-//               <p className="text-gray-600 leading-relaxed">
-//                 Enter a state of flow with our distraction-free environment designed for maximum concentration.
-//               </p>
-//             </div>
-            
-//             <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-100 hover:-translate-y-1">
-//               <div className="bg-gradient-to-br from-purple-500 to-indigo-600 w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
-//                 <Clock className="w-8 h-8 text-white" />
-//               </div>
-//               <h3 className="text-xl font-bold text-gray-900 mb-4">Smart Time Management</h3>
-//               <p className="text-gray-600 leading-relaxed">
-//                 Optimize your productivity with intelligent time tracking and personalized insights.
-//               </p>
-//             </div>
-            
-//             <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-100 hover:-translate-y-1">
-//               <div className="bg-gradient-to-br from-purple-500 to-indigo-600 w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
-//                 <Target className="w-8 h-8 text-white" />
-//               </div>
-//               <h3 className="text-xl font-bold text-gray-900 mb-4">Goal Achievement</h3>
-//               <p className="text-gray-600 leading-relaxed">
-//                 Track your progress and celebrate milestones as you achieve your goals with focused dedication.
-//               </p>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-      
-//       {/* Footer */}
-//       <footer className="py-8 text-center bg-white/50 backdrop-blur-sm border-t border-purple-100">
-//         <p className="text-gray-600">© 2025 FocusZen. All rights reserved.</p>
-//       </footer>
-//     </div>
-//   );
-// };
-
-// export default Home;
