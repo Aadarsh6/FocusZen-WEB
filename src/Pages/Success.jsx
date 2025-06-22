@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Trophy, Sparkles, Home, RotateCcw } from "lucide-react";
@@ -7,10 +7,10 @@ import ShootConfetti from "../Component/UI/ShootConfettie";
 
 const Success = () => {
   const { theme } = useTheme();
+  const confettiRef = useRef(null);
 
   // Clear localStorage
   useEffect(() => {
-    // Clear all localStorage items
     localStorage.removeItem("Focus.url");
     localStorage.removeItem("Focus.time");
     localStorage.removeItem("Focus.EndTime");
@@ -18,35 +18,31 @@ const Success = () => {
     localStorage.removeItem("timeLeft");
   }, []);
 
-  // Trigger confetti with enhanced timing
+  // Trigger confetti with proper cleanup
   useEffect(() => {
     const timer = setTimeout(() => {
       try {
-        ShootConfetti();
+        confettiRef.current = ShootConfetti();
       } catch (error) {
         console.error("Failed to shoot confetti:", error);
       }
     }, 500);
-    
-    // Second confetti burst
-    const timer2 = setTimeout(() => {
-      try {
-        ShootConfetti();
-      } catch (error) {
-        console.error("Failed to shoot second confetti:", error);
-      }
-    }, 2000);
-    
+
+    // Cleanup function
     return () => {
       clearTimeout(timer);
-      clearTimeout(timer2);
+      if (confettiRef.current && confettiRef.current.cleanup) {
+        confettiRef.current.cleanup();
+      }
     };
   }, []);
 
+  // Rest of your component remains the same...
   const bgClass = theme === 'light' ? 'bg-slate-50' : 'bg-gray-950';
   const textPrimary = theme === 'light' ? 'text-slate-800' : 'text-gray-100';
   const textSecondary = theme === 'light' ? 'text-slate-600' : 'text-gray-400';
   const accentGradient = "from-green-400 via-cyan-400 to-purple-500";
+
 
   return (
     <div className={`min-h-screen ${bgClass} font-sans flex flex-col items-center justify-center transition-colors duration-500 overflow-hidden relative`}>
