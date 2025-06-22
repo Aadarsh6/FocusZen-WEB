@@ -94,7 +94,7 @@ const Focus = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen gap-4 bg-gray-900 text-white">
+    <div className="flex flex-col justify-center items-center h-screen gap-4 bg-[#030b13] text-white">
       <Timer initialTimer={time * 60} onComplete={handleSuccess} onReset={handleReset} /> {// ADDED OnRest HERE
 }
       {wrongTab && (
