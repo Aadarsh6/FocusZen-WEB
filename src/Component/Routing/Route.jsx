@@ -1,6 +1,7 @@
 import Focus from "../../Pages/Focus";
 import FocusSetup from "../../Pages/FocusSetup";
 import Home from "../../Pages/Home";
+import Statics from "../../Pages/Statics";
 // import FocusSetup from '../../Pages/FocusSetup'
 import Success from "../../Pages/Success";
 import TypingChallenge from "../TypingChallenge";
@@ -14,6 +15,7 @@ const AppRoute = () => {
         <Route path="/focusMode" element={<FocusSetup />} />
         <Route path="/success" element={<Success />} />
         <Route path="/type" element={<TypingChallenge />} />
+        <Route path="/Statics" element={<Statics />} />
         <Route path="/focus" element={<Focus />} />
       </Routes>
     </div>

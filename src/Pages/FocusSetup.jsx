@@ -56,7 +56,7 @@ const FocusSetup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const hiddenUrl = ["https://focuszen.vercel.app/", "http://localhost:5173/focus"];
+    const hiddenUrl = ["https://focuszen.vercel.app/", "http://localhost:"];
     const validUserUrls = urls.filter(url => url.trim() !== "");
     
     if (validUserUrls.length === 0) {

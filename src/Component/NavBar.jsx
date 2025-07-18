@@ -27,7 +27,7 @@ const NavBar = () => {
   const navigationLinks = [
     { name: "Home", path: "/" },
     { name: "Focus Mode", path: "/focusMode" },
-    { name: "Statistics", path: "/statistics" },
+    { name: "Statics", path: "/Statics" },
     { name: "Settings", path: "/settings" }
   ];
 

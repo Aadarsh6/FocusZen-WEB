@@ -26,7 +26,6 @@ const MasteryIcon = () => (
   </svg>
 );
 
-
 const Home = () => {
   const { theme } = useTheme();
 
@@ -40,7 +39,7 @@ const Home = () => {
 
   // --- Aurora Theme Color Palette ---
   const bgClass = theme === "light" 
-    ? "bg-slate-50" 
+    ? "bg-slate-100" 
     : "bg-gray-950 text-white";
     
   const textPrimary = theme === "light" ? "text-gray-900" : "text-gray-100";
@@ -79,7 +78,7 @@ const Home = () => {
       
       <NavBar />
       
-      <main className="relative z-10 flex flex-col items-center justify-center px-6 py-24 sm:py-32">
+      <main className="relative z-10 flex flex-col items-center px-6 py-24 sm:py-32">
         {/* --- Hero Section --- */}
         <div className="text-center max-w-4xl mx-auto">
           <div className="animate-fadeInUp" style={{animationDelay: '100ms'}}>
@@ -98,16 +97,47 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="animate-fadeInUp" style={{animationDelay: '500ms'}}>
+          {/* --- CTA Buttons Container --- */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fadeInUp" style={{animationDelay: '500ms'}}>
+            {/* Primary CTA */}
             <Link
               to="/focusMode"
-              className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-gray-900 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-cyan-500/50"
+              className="group relative inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 text-lg font-bold text-white bg-gray-900 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-cyan-500/50"
             >
-               <span className={`absolute -inset-0.5 rounded-full ${accentGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur`}></span>
-               <span className="relative">Start Your Session</span>
+              <span className={`absolute -inset-0.5 rounded-full ${accentGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur`}></span>
+              <span className="relative">Start Your Session</span>
             </Link>
+
+            {/* --- ADDED: Secondary CTA for Extension --- */}
+            <a
+              href="https://chrome.google.com/webstore" // <-- IMPORTANT: Replace with your actual extension link
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`relative inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 text-lg font-bold rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-cyan-500/50 ${theme === 'light' ? 'bg-white text-gray-800 border border-gray-200 hover:bg-gray-50' : 'bg-gray-800/50 text-gray-200 border border-gray-700 hover:bg-gray-800'}`}
+            >
+              Get The Extension
+            </a>
           </div>
         </div>
+
+        {/* --- ADDED: 'How It Works' Tutorial Video Section --- */}
+        <div className="w-full max-w-4xl mx-auto mt-32 animate-fadeInUp" style={{ animationDelay: `700ms` }}>
+            <div className="text-center mb-12">
+                <h2 className={`text-4xl font-bold ${textPrimary}`}>See It In Action</h2>
+                <p className={`mt-4 text-lg ${textSecondary}`}>A quick walkthrough of how FocusZen helps you reclaim your attention.</p>
+            </div>
+            <div className="aspect-w-16 aspect-h-9 rounded-2xl overflow-hidden shadow-2xl bg-gray-900 ring-1 ring-white/10">
+                <iframe 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" // <-- IMPORTANT: Replace with your video embed URL
+                    title="FocusZen Tutorial" 
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowFullScreen
+                    className="w-full h-full"
+                ></iframe>
+            </div>
+        </div>
+
 
         {/* --- Features Section --- */}
         <div className="w-full max-w-5xl mx-auto mt-32">
@@ -116,7 +146,8 @@ const Home = () => {
               <div
                 key={index}
                 className="group text-center animate-fadeInUp"
-                style={{ animationDelay: `${700 + index * 200}ms` }}
+                // Adjusted animation delay to account for the new video section
+                style={{ animationDelay: `${900 + index * 200}ms` }}
               >
                 <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 ${feature.accentClass} bg-white/5 backdrop-blur-sm border border-white/10 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300`}>
                   {feature.icon}
@@ -137,6 +168,9 @@ const Home = () => {
       </footer>
 
       {/* --- Keyframes for Animations --- */}
+      {/* NOTE: You need Tailwind's aspect-ratio plugin for the video.
+          If not already installed: npm install @tailwindcss/aspect-ratio
+          Then add it to your tailwind.config.js: plugins: [require('@tailwindcss/aspect-ratio')] */}
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
         
@@ -168,6 +202,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-

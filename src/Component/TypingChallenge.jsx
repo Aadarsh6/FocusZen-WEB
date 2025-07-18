@@ -157,7 +157,7 @@ const TypingChallenge = () => {
               {/* Header */}
               <div className="text-center mb-8">
                 <div className="flex items-center justify-center mb-4">
-                  <Type size={24} className="text-red-5 00 mr-3" />
+                  <Type size={24} className="text-red-500 mr-3" />
                   <h1 className={`text-2xl font-bold ${textPrimary}`}>
                     Type to Exit Focus Mode
                   </h1>
