@@ -16,7 +16,7 @@ const HeroSection = () => {
       />
 
       {/* Dim overlay */}
-      <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
+      <div className="absolute inset-0 bg-black/30" aria-hidden="true" />
 
       {/* Radial vignette */}
       <div
@@ -50,7 +50,7 @@ const HeroSection = () => {
         </motion.p>
 
         <motion.div
-          className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
+          className="mt-6 flex flex-col sm:flex-row gap-4 justify-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
@@ -59,7 +59,7 @@ const HeroSection = () => {
   <button className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition">
     Start a Focus Session
   </button>
-  <a href="#" className="text-sm text-white/70 hover:text-white/90 underline">
+  <a href="#" className="text-sm text-white/50 hover:text-white/90 hover:underline">
     Download Extension
   </a>
 </div>
