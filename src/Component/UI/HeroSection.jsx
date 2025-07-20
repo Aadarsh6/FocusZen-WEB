@@ -1,3 +1,6 @@
+import { motion } from "framer-motion";
+
+
 const HeroSection = () => {
   return (
     <section
@@ -22,27 +25,47 @@ const HeroSection = () => {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-2xl px-6 text-white/90">
-        <h1 className="font-jost text-5xl md:text-7xl font-semibold tracking-tight mb-5 leading-tight drop-shadow-lg">
+       <motion.div
+        className="relative z-10 max-w-xl px-4 text-white/90"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+      >
+        <motion.h1
+          className="font-jost text-4xl md:text-6xl font-semibold tracking-tight mb-6 leading-tight"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+        >
           Enter Deep Focus
-        </h1>
+        </motion.h1>
 
-        <p className="text-lg md:text-2xl leading-relaxed font-intel text-white/80 max-w-lg mx-auto mb-8">
-          Silence the noise.<br className="hidden md:block" />  
-          Let your higher mind take over.
-        </p>
+        <motion.p
+          className="text-lg md:text-xl leading-relaxed font-intel"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+        >
+          Silence the noise. <br /> Let your higher mind take over.
+        </motion.p>
 
-        {/* CTA Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-  <button className="px-6 py-3 rounded-lg bg-white/85 text-black font-medium hover:bg-white/90 transition">
+        <motion.div
+          className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+        >
+         <div className="flex flex-col gap-3 items-center">
+  <button className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition">
     Start a Focus Session
   </button>
-  <button className="px-6 py-3 rounded-lg bg-transparent border border-white/20 text-white font-medium hover:bg-white/10 transition">
+  <a href="#" className="text-sm text-white/70 hover:text-white/90 underline">
     Download Extension
-  </button>
+  </a>
 </div>
 
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
