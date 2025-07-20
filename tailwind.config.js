@@ -1,12 +1,10 @@
 /** @type {import('tailwindcss').Config} */
-import preset from '@tailwindcss/preset'; // Make sure you have the preset
-
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  presets: [preset()], // Add the preset
+  // Remove the presets line - not needed in v4
   theme: {
     extend: {
       fontFamily: {
@@ -18,7 +16,6 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
       },
-      // Add your animations and keyframes here
       keyframes: {
         blob: {
           '0%': { transform: 'scale(1)' },
@@ -37,6 +34,5 @@ export default {
       }
     }
   },
-  // The plugins array should be empty now
   plugins: [],
 }
