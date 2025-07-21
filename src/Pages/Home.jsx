@@ -203,16 +203,18 @@
 
 // export default Home;
 
-
-import HeroSection from '../Component/UI/HeroSection'
+import NavBar from '@/Component/NavBar';
+import HeroSection from '../Component/UI/HeroSection';
 
 const Home = () => {
   return (
-    <div>
-      <HeroSection/>
+    <div className="relative bg-[#0a0a0a}">
+      <HeroSection />
+      <div className='absolute top-6 left-1/2 transform -translate-x-1/2 w-[80%] z-10'>
+      <NavBar/>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
-
+export default Home;

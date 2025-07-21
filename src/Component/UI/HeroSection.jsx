@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 const HeroSection = () => {
   return (
     <section
-      className="relative h-screen w-full flex items-center justify-center text-center overflow-hidden"
+      className="relative h-screen w-full bg-[#0a0a0a] flex items-center justify-center text-center overflow-hidden"
       role="banner"
       aria-label="FocusZen hero section"
     >
