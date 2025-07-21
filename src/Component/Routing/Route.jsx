@@ -6,6 +6,8 @@ import Statics from "../../Pages/Statics";
 import Success from "../../Pages/Success";
 import TypingChallenge from "../TypingChallenge";
 import { Route, Routes } from "react-router-dom";
+// import ProblemSection from "../UI/ProblemSection";
+import { FeatureSection } from "../UI/FeatureSection";
 
 const AppRoute = () => {
   return (
@@ -17,6 +19,7 @@ const AppRoute = () => {
         <Route path="/type" element={<TypingChallenge />} />
         <Route path="/Statics" element={<Statics />} />
         <Route path="/focus" element={<Focus />} />
+        <Route path="/a" element={<FeatureSection />} />
       </Routes>
     </div>
   );

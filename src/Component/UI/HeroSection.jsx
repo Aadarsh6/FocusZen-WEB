@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 
 
 const HeroSection = () => {
+  
   return (
     <section
       className="relative h-screen w-full bg-[#0a0a0a] flex items-center justify-center text-center overflow-hidden"
@@ -59,7 +60,7 @@ const HeroSection = () => {
   <button className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition">
     Start a Focus Session
   </button>
-  <a href="#" className="text-sm text-white/50 hover:text-white/90 hover:underline">
+  <a href="#" className="text-md text-white/50 hover:text-white/90 hover:underline">
     Download Extension
   </a>
 </div>

@@ -202,16 +202,26 @@
 // };
 
 // export default Home;
-
 import NavBar from '@/Component/NavBar';
 import HeroSection from '../Component/UI/HeroSection';
+import ProblemSection from '@/Component/UI/ProblemSection';
 
 const Home = () => {
   return (
-    <div className="relative bg-[#0a0a0a}">
-      <HeroSection />
-      <div className='absolute top-6 left-1/2 transform -translate-x-1/2 w-[80%] z-10'>
-      <NavBar/>
+    <div className="relative bg-[#0a0a0a] min-h-screen">
+      {/* Navigation Bar - Fixed at top */}
+      <div className="fixed top-6 left-1/2 transform -translate-x-1/2 w-[80%] z-50">
+        <NavBar />
+      </div>
+
+      {/* Hero Section */}
+      <div className="relative z-10">
+        <HeroSection />
+      </div>
+
+      {/* Problem Section */}
+      <div className="relative bg-[#0a0a0a] z-20">
+        <ProblemSection />
       </div>
     </div>
   );
