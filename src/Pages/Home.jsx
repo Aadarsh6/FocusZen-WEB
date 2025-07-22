@@ -6,7 +6,8 @@ import ProblemToSolutionTransition from "@/Component/UI/Sepereation";
 
 export default function HomePage() {
   return (
-    <main className="bg-[#0a0a0a]">
+    
+      <main className="bg-[#0a0a0a] min-h-screen overflow-x-hidden">
       <HeroSection />
       <ProblemSection />
       <ProblemToSolutionTransition/>

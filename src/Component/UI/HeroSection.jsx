@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import NavBar from "@/Component/NavBar"; // Import the NavBar
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -59,9 +60,13 @@ const HeroSection = () => {
           transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
         >
           <div className="flex flex-col gap-3 items-center">
+            <Link
+            
+           to="focusMode" >
             <button className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition">
               Start a Focus Session
             </button>
+            </Link>
             <a href="#" className="text-md text-white/50 hover:text-white/90 hover:underline">
               Download Extension
             </a>

@@ -13,30 +13,26 @@ const Footer = () => {
   const socialLinks = [
     { icon: Twitter, href: "#", label: "Twitter" },
     { icon: Github, href: "#", label: "GitHub" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
     { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Mail, href: "mailto:hello@focuszen.com", label: "Email" }
+    { icon: Mail, href: "mailto:aadarshakmishra16@gmail.com", label: "Email" }
   ];
 
   const productLinks = [
     { name: "Features", href: "#features" },
     { name: "Pricing", href: "#pricing" },
-    { name: "Download", href: "#download" },
-    { name: "Roadmap", href: "#roadmap" }
+    { name: "Download", href: "#download" }
   ];
 
   const companyLinks = [
     { name: "About", href: "#about" },
     { name: "Blog", href: "#blog" },
-    { name: "Careers", href: "#careers" },
     { name: "Contact", href: "#contact" }
   ];
 
   const supportLinks = [
     { name: "Help Center", href: "#help" },
     { name: "Privacy Policy", href: "#privacy" },
-    { name: "Terms of Service", href: "#terms" },
-    { name: "Status", href: "#status" }
+    { name: "Terms of Service", href: "#terms" }
   ];
 
   return (
@@ -219,7 +215,7 @@ const Footer = () => {
           <div className="flex items-center text-white/40 text-sm">
             <span>Made with</span>
             <Heart className="w-4 h-4 mx-1 text-red-400 fill-current" />
-            <span>for deep work</span>
+            <span>by Adarsh</span>
           </div>
         </motion.div>
       </div>

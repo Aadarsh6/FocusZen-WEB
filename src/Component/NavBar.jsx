@@ -164,22 +164,16 @@ const NavBar = () => {
   ];
 
   return (
-    <motion.nav
+    <nav
       className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex justify-between items-center 
                  h-20 w-[80%] px-8 md:px-12
                  bg-transparent backdrop-blur-xl 
                  shadow-xl rounded-xl border " // <-- Positioning changed here
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
     >
       {/* Logo */}
-      <motion.div
+      <div
         className="flex justify-start items-center"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-      >
+        >
         <NavLink to="/" className="flex items-center group">
           <div className="flex items-end">
             <span className="text-2xl md:text-3xl font-semibold font-jost text-white/90 group-hover:text-white transition-colors duration-300">
@@ -190,14 +184,11 @@ const NavBar = () => {
             </span>
           </div>
         </NavLink>
-      </motion.div>
+      </div>
 
       {/* Navigation Links */}
-      <motion.div
+      <div
         className="hidden md:flex items-center space-x-8"
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
       >
         {navigationLinks.map((item) => (
           <NavLink
@@ -215,14 +206,11 @@ const NavBar = () => {
             )}
           </NavLink>
         ))}
-      </motion.div>
+      </div>
 
       {/* CTA Button */}
-      <motion.div
+      <div
         className="flex items-center space-x-4"
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
       >
         <button className="hidden md:block px-5 py-2.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 font-intel font-medium hover:bg-white/20 hover:border-white/30 transition-all duration-300">
           Sign In
@@ -230,20 +218,17 @@ const NavBar = () => {
         <button className="px-5 py-2.5 rounded-lg bg-white text-black font-intel font-medium hover:bg-white/90 transition-all duration-300 shadow-lg">
           Get Started
         </button>
-      </motion.div>
+      </div>
 
       {/* Mobile Menu Button */}
-      <motion.button
+      <button
         className="md:hidden text-white/70 hover:text-white/90 transition-colors duration-300"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
         </svg>
-      </motion.button>
-    </motion.nav>
+      </button>
+    </nav>
   );
 };
 
