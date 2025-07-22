@@ -151,17 +151,11 @@
 // };
 
 // export default NavBar;
-
-
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-// import { motion }
-import { motion } from "motion/react";
-// import { NavLink } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const NavBar = () => {
-
-
   const navigationLinks = [
     { name: "Home", path: "/" },
     { name: "Focus Mode", path: "/focusMode" },
@@ -169,19 +163,18 @@ const NavBar = () => {
     { name: "Settings", path: "/settings" }
   ];
 
-
   return (
-    <motion.nav 
-      className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center 
-                 h-20 w-full px-8 md:px-12
+    <motion.nav
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex justify-between items-center 
+                 h-20 w-[80%] px-8 md:px-12
                  bg-transparent backdrop-blur-xl 
-                 shadow-xl"
+                 shadow-xl rounded-xl border " // <-- Positioning changed here
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
       {/* Logo */}
-      <motion.div 
+      <motion.div
         className="flex justify-start items-center"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -200,32 +193,32 @@ const NavBar = () => {
       </motion.div>
 
       {/* Navigation Links */}
-      <motion.div 
+      <motion.div
         className="hidden md:flex items-center space-x-8"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
       >
-         {navigationLinks.map((item) => (
-                <NavLink
-                  key={item.name}
-                  to={item.path}
-                 className={"text-white/70 hover:text-white/90 font-intel text-sm font-medium transition-colors duration-300 relative group"}
-                >
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white/60 group-hover:w-full transition-all duration-300"></span>
-                  {item.path === location.pathname && (
-                    <motion.div
-                      layoutId="underline"
-                      className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-white/60 group-hover:w-full transition-all duration-300 `}
-                    />
-                  )}
-                  {item.name}
-                </NavLink>
-              ))}
+        {navigationLinks.map((item) => (
+          <NavLink
+            key={item.name}
+            to={item.path}
+            className={"text-white/70 hover:text-white/90 font-intel text-sm font-medium transition-colors duration-300 relative group"}
+          >
+            {item.name}
+            <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-white/60 group-hover:w-full transition-all duration-300"></span>
+            {item.path === location.pathname && (
+              <motion.span
+                layoutId="underline"
+                className="absolute -bottom-1 left-0 w-full h-0.5 bg-white"
+              />
+            )}
+          </NavLink>
+        ))}
       </motion.div>
 
       {/* CTA Button */}
-      <motion.div 
+      <motion.div
         className="flex items-center space-x-4"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -240,7 +233,7 @@ const NavBar = () => {
       </motion.div>
 
       {/* Mobile Menu Button */}
-      <motion.button 
+      <motion.button
         className="md:hidden text-white/70 hover:text-white/90 transition-colors duration-300"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

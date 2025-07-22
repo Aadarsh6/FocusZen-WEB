@@ -49,9 +49,9 @@ const ProblemSection = () => {
   return (
     <motion.section 
       ref={sectionRef}
-      className="py-20 md:py-20 overflow-hidden relative h-screen w-full bg-[#0a0a0a] flex items-center justify-center text-center"
+      className="relative min-h-screen w-full bg-[#0a0a0a] flex items-center justify-center text-center overflow-hidden"
     >
-        <div
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/bg3.jpg')" }}
         aria-hidden="true"
@@ -69,68 +69,87 @@ const ProblemSection = () => {
         
         {/* Main Headline */}
         <motion.div
-          className="mb-10"
+          className="mb-5 mt-15"
           initial={{ opacity: 0, y: 40 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h2 className="text-4xl md:text-6xl lg:text-5xl font-jost text-white/50 font-semibold tracking-tight mb-6 mt-14 leading-tight">
+          <h2 className="text-4xl md:text-6xl lg:text-5xl font-jost text-white/50 font-semibold tracking-tight mb-6 leading-tight">
             The Hidden Cost of,
             <br />
             <span className="bg-white bg-clip-text text-transparent font-bold">
               Digital Distraction
             </span>
           </h2> 
-          
         </motion.div>
 
-        {/* Time Breakdown Card */}
+        {/* Time Breakdown Section */}
         <motion.div
-          className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-6 md:p-10 mb-10"
+          className="mb-16"
           initial={{ opacity: 0, y: 40 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
         >
-          <h3 className="text-2xl md:text-3xl font-light text-white mb-8">
-            A Typical Day's <span className="text-blue-400">Interruptions</span>
+          <h3 className="text-2xl md:text-3xl font-jost font-light text-white/90 mb-16 text-center">
+            A Typical Day's <span className="text-white font-medium">Interruptions</span>
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            {/* Time Stats */}
+          {/* Flowing layout */}
+          <div className="max-w-2xl mx-auto space-y-12">
+            {/* Time Stats - Clean List */}
             <div className="space-y-4">
               {timeStat.map((stat, index) => (
                 <motion.div
                   key={stat.name}
-                  className="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/10"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                  transition={{ duration: 0.6, delay: 0.5 + (index * 0.1), ease: "easeOut" }}
+                  className="group relative text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  transition={{ duration: 0.8, delay: 0.5 + (index * 0.2), ease: "easeOut" }}
                 >
-                  <span className="text-white/80 text-sm md:text-base">{stat.name}</span>
-                  <span className="font-semibold text-blue-400 text-sm md:text-base">{stat.time}</span>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2">
+                    <span className="text-white/60 text-base md:text-lg font-light tracking-wide">
+                      {stat.name}
+                    </span>
+                    
+                    {/* Connecting dots */}
+                    <div className="hidden sm:flex items-center flex-1 mx-8">
+                      <div className="flex-1 border-b border-dotted border-white/20"></div>
+                    </div>
+                    
+                    <span className="font-jost font-normal text-white text-lg md:text-xl tabular-nums">
+                      {stat.time}
+                    </span>
+                  </div>
+                  
+                  {/* Subtle separator line */}
+                  {index < timeStat.length - 1 && (
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  )}
                 </motion.div>
               ))}
             </div>
             
             {/* Total Impact */}
-            <div className="flex flex-col justify-center items-center">
-              <motion.div 
-                className="text-4xl md:text-6xl text-white/80 mb-4 font-semibold"
-                initial={{ scale: 0 }}
-                animate={isVisible ? { scale: 1 } : { scale: 0 }}
-                transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-              >
-                {totalTime}
-              </motion.div>
-              <div className="text-xl md:text-2xl text-white/90 ">Hours Lost</div>
-              <div className="text-lg md:text-xl text-white/60 mb-6 text-balance">Every year</div>
-              
-              <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-400/20 rounded-2xl p-6">
-                <p className="text-sm md:text-base text-white/80">
-                  That's <span className="text-blue-400 font-semibold">3.3 hours per day</span> of pure potential.
-                </p>
+            <motion.div 
+              className="text-center pt-8"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+              transition={{ duration: 1, delay: 1.2, ease: "easeOut" }}
+            >
+              {/* Large number with breathing space */}
+              <div className="mb-1">
+                <div className="text-6xl md:text-8xl text-white font-jost font-light tabular-nums mb-2">
+                  {totalTime}
+                </div>
+                <div className="text-xl md:text-2xl text-white/70 font-light">Hours Lost</div>
+                <div className="text-base text-white/40">Every year</div>
               </div>
-            </div>
+              
+              {/* Simple statement */}
+              <p className="text-base md:text-lg text-white/50 font-light leading-relaxed max-w-md mx-auto">
+                That's <span className="text-white/80">3.3 hours daily</span> of untapped potential
+              </p>
+            </motion.div>
           </div>
         </motion.div>
 
@@ -142,28 +161,12 @@ const ProblemSection = () => {
           transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
         >
           <p className="text-lg md:text-xl text-white/70 leading-relaxed">
-            What could you create with <span className="text-blue-400 font-semibold">1,200 focused hours</span>?
+            What could you create with <span className="text-white font-medium">1,200 focused hours</span>?
           </p>
           <p className="text-base md:text-lg text-white/50">
             A new skill. A business. A masterpiece. A better you.
           </p>
         </motion.div>
-
-        {/* Call to Action */}
-        {/* <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8, delay: 1.1, ease: "easeOut" }}
-        >
-          <button className="px-8 py-4 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-all duration-300 text-sm md:text-base">
-            Reclaim Your Time
-          </button>
-          <button className="px-8 py-4 border border-white/30 text-white font-medium rounded-full hover:bg-white/10 transition-all duration-300 text-sm md:text-base">
-            Learn More
-          </button>
-        </motion.div> */}
-
       </div>
     </motion.section>
   );

@@ -1,14 +1,16 @@
 import { motion } from "framer-motion";
-
+import NavBar from "@/Component/NavBar"; // Import the NavBar
 
 const HeroSection = () => {
-  
   return (
     <section
       className="relative h-screen w-full bg-[#0a0a0a] flex items-center justify-center text-center overflow-hidden"
       role="banner"
       aria-label="FocusZen hero section"
     >
+      {/* NavBar is placed here to be positioned relative to the HeroSection */}
+      <NavBar />
+
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -26,7 +28,7 @@ const HeroSection = () => {
       />
 
       {/* Content */}
-       <motion.div
+      <motion.div
         className="relative z-10 max-w-xl px-4 text-white/90"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -56,15 +58,14 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
         >
-         <div className="flex flex-col gap-3 items-center">
-  <button className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition">
-    Start a Focus Session
-  </button>
-  <a href="#" className="text-md text-white/50 hover:text-white/90 hover:underline">
-    Download Extension
-  </a>
-</div>
-
+          <div className="flex flex-col gap-3 items-center">
+            <button className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition">
+              Start a Focus Session
+            </button>
+            <a href="#" className="text-md text-white/50 hover:text-white/90 hover:underline">
+              Download Extension
+            </a>
+          </div>
         </motion.div>
       </motion.div>
     </section>
