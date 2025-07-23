@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Clock, Shield, FileText, BarChart3 } from "lucide-react";
+import { Cover } from "@/components/ui/cover";
 
 const FeatureSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -49,15 +50,24 @@ const FeatureSection = () => {
   return (
     <motion.section 
       ref={sectionRef}
-      className="relative min-h-screen w-full bg-[#0a0a0a] flex items-center justify-center py-10 text-center overflow-hidden"
+      className="min-h-screen flex items-center justify-center p-4 py-20 relative overflow-hidden"
     >
       {/* Background Image */}
-      <div
+      {/* <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/bg3.jpg')" }}
         aria-hidden="true"
       />
-      
+       */}
+
+          {/* Dark Base Background */}
+            <div className="absolute inset-0 bg-[#000000] z-0" />
+
+            {/* Dotted Background */}
+            <div className="absolute inset-0 bg-[radial-gradient(white_2px,transparent_1px)] [background-size:16px_16px] opacity-20 z-0" />
+
+
+
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/30" aria-hidden="true" />
 
@@ -77,13 +87,16 @@ const FeatureSection = () => {
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h2 className="text-4xl md:text-6xl lg:text-5xl font-jost text-white/50 font-semibold tracking-tight leading-tight">
+          {/* <h2 className="text-4xl md:text-6xl lg:text-5xl font-jost text-white/50 font-semibold tracking-tight leading-tight">
             Built for
-            <br />
-            <span className="bg-white bg-clip-text text-transparent font-bold">
+            <br /> */}
+            {/* <span className="bg-white bg-clip-text text-transparent font-bold">
               Deep Work
-            </span>
-          </h2>
+            </span> */}
+            <h1 className="text-4xl md:text-4xl lg:text-6xl font-semibold max-w-7xl mx-auto text-center mt-6 relative z-20 py-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white">
+        Build amazing websites <br /> at <Cover>Deep work</Cover>
+      </h1>
+          {/* </h2> */}
           {/* <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed max-w-2xl mx-auto">
             Every feature designed to eliminate distractions and amplify your focus
           </p> */}

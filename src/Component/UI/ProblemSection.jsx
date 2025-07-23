@@ -137,8 +137,8 @@ const ProblemSection = () => {
               transition={{ duration: 1, delay: 1.2, ease: "easeOut" }}
             >
               {/* Large number with breathing space */}
-              <div className="mb-1">
-                <div className="text-6xl md:text-8xl text-white font-jost font-light tabular-nums mb-2">
+              <div>
+                <div className="text-6xl md:text-8xl text-white font-jost font-light tabular-nums">
                   {totalTime}
                 </div>
                 <div className="text-xl md:text-2xl text-white/70 font-light">Hours Lost</div>
@@ -155,7 +155,7 @@ const ProblemSection = () => {
 
         {/* Reflection Questions */}
         <motion.div
-          className="space-y-4 mb-12"
+          className="space-y-2 mb-12"
           initial={{ opacity: 0, y: 30 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
