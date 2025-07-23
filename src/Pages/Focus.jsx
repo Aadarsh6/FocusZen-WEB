@@ -8,9 +8,6 @@ const Focus = () => {
 
   const urls = JSON.parse(localStorage.getItem("Focus.url") || "[]");
   const time = parseInt(localStorage.getItem("Focus.time") || "0");
-  // const endTime = parseInt(localStorage.getItem("Focus.EndTime") || "0");
-  // const currentTime = Date.now();
-  // const remainingSeconds = Math.floor((endTime - currentTime) / 1000);
 
   // 🔁 Send focus session data to extension
   useEffect(() => {
@@ -46,30 +43,33 @@ const Focus = () => {
     navigate("/success");
   };
 
-  const handleReset =() =>{  // ADDED OnRest HERE CREATED A SPECIAL FN
+  const handleReset = () => {
     window.postMessage({
       type: "EndFocusSession"
-    }, "*")
+    }, "*");
   };
 
   return (
-  <div className="relative flex flex-col justify-center items-center min-h-screen gap-4 text-white bg-[#030b13] overflow-hidden">
+    <div className="relative min-h-screen w-full flex items-center justify-center text-white bg-[#030b13] overflow-hidden">
+      {/* Dark Base Background */}
+      <div className="absolute inset-0 bg-[#0d0d0d] z-0" />
 
-    {/* Starfield Layer (subtle, static) */}
-    <div className="absolute inset-0 bg-[radial-gradient(white_1.5px,transparent_1px)] [background-size:15px_15px] opacity-[0.20] z-0" />
+      {/* Dotted Background */}
+      <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] opacity-20 z-0" />
 
-    <div className="w-full mt-5 z-10">
-      <Timer initialTimer={time * 60} onComplete={handleSuccess} onReset={handleReset} />
-    </div>
-
-    {wrongTab && (
-      <div className="fixed top-0 left-0 w-full h-full bg-red-900/70 flex justify-center items-center text-3xl font-bold z-50">
-        STAY FOCUSED!
+      {/* Timer Component - Now properly centered */}
+      <div className="w-full z-10">
+        <Timer initialTimer={time * 60} onComplete={handleSuccess} onReset={handleReset} />
       </div>
-    )}
-  </div>
-);
 
+      {/* Wrong Tab Overlay */}
+      {wrongTab && (
+        <div className="fixed top-0 left-0 w-full h-full bg-red-900/70 flex justify-center items-center text-3xl font-bold z-50">
+          STAY FOCUSED!
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Focus;
