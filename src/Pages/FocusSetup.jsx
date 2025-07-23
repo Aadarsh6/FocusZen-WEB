@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { X, Plus, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,12 +14,12 @@ const FocusSetup = () => {
   const [showSuggestion, setShowSuggestion] = useState(false);
   const errorRef = useRef(null);
 
-  useEffect(() => {
-    if (error && errorRef.current) {
-      errorRef.current.focus();
-      errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   if (error && errorRef.current) {
+  //     errorRef.current.focus();
+  //     errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  //   }
+  // }, [error]);
 
   const handleUrl = (index, value) => {
     const newUrls = [...urls];
@@ -84,8 +84,11 @@ const FocusSetup = () => {
   const timeOptions = [30, 45, 60, 90, 120];
 
   return (
-    <section className="relative min-h-screen w-full bg-[#0a0a0a] flex items-center justify-center text-center overflow-hidden py-40">
-      <NavBar />
+   <>
+  <NavBar />
+  <section className="relative min-h-screen w-full bg-[#0a0a0a] flex items-center justify-center text-center overflow-hidden pt-40">
+
+
       
       {/* Background Image & Overlays */}
       <div
@@ -101,11 +104,12 @@ const FocusSetup = () => {
 
       {/* Main Content: Width is now w-[80%] to align with NavBar */}
       <motion.div 
-        className="relative z-10 w-[80%] max-w-5xl mx-auto px-8 md:px-12 text-white"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-      >
+  className="relative z-10 w-[80%] max-w-5xl mx-auto px-8 md:px-12 text-white"
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1.5, ease: "easeOut" }}
+>
+
         {/* Header */}
         <motion.div
           className="text-center mb-12"
@@ -267,7 +271,7 @@ const FocusSetup = () => {
           
           {/* Submit Button */}
           <motion.div
-            className="pt-4"
+            className="pt-4 pb-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
@@ -282,6 +286,7 @@ const FocusSetup = () => {
         </motion.form>
       </motion.div>
     </section>
+    </>
   );
 };
 

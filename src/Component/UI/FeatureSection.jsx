@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Clock, Shield, FileText, BarChart3 } from "lucide-react";
 import { Cover } from "@/components/ui/cover";
+import { Link } from "react-router-dom";
 
 const FeatureSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -28,29 +29,33 @@ const FeatureSection = () => {
     {
       icon: Clock,
       title: "Smart Time Sessions",
-      description: "Custom focus durations with intelligent break reminders"
+      description: "Custom focus durations with intelligent break reminders",
+      color: "#3b82f6"    
     },
     {
       icon: Shield,
       title: "URL Blocking",
-      description: "Block distracting websites during your focus time"
+      description: "Block distracting websites during your focus time",
+      color: "#ef4444"
     },
     {
       icon: FileText,
       title: "Commitment Barrier",
-      description: "Thoughtful exit process prevents mindless clicking"
+      description: "Thoughtful exit process prevents mindless clicking",
+      color: "#f59e0b"
     },
     {
       icon: BarChart3,
       title: "Focus Analytics",
-      description: "Track productivity patterns and celebrate progress"
+      description: "Track productivity patterns and celebrate progress",
+      color: "#10b981"
     }
   ];
 
   return (
     <motion.section 
       ref={sectionRef}
-      className="min-h-screen flex items-center justify-center p-4 py-20 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center p-4 py-25 relative overflow-hidden"
     >
       {/* Background Image */}
       {/* <div
@@ -126,7 +131,7 @@ const FeatureSection = () => {
                 <div className="flex flex-col items-center space-y-4">
                   {/* Icon */}
                   <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm group-hover:bg-white/20 transition-all duration-300 mb-2">
-                    <feature.icon className="w-7 h-7 text-white/80" strokeWidth={1.5} />
+                    <feature.icon className="w-7 h-7 text-white/80" strokeWidth={1.5} style={{color: feature.color}}/>
                   </div>
 
                   {/* Content */}
@@ -162,7 +167,9 @@ const FeatureSection = () => {
           <p className="text-base md:text-lg text-white/50 mb-8">
             Start your focused work journey today.
           </p>
-          
+          <Link
+          to="/focusMode"
+          >
           <motion.button 
             className="px-8 py-4 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
@@ -170,6 +177,7 @@ const FeatureSection = () => {
           >
             Get Started Free
           </motion.button>
+          </Link>
         </motion.div>
       </div>
     </motion.section>
