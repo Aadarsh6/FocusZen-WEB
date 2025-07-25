@@ -3,14 +3,10 @@ import FeatureSection from "@/Component/UI/FeatureSection";
 import Footer from "@/Component/UI/Footer";
 import HeroSection from "@/Component/UI/HeroSection";
 import ProblemSection from "@/Component/UI/ProblemSection";
-import Lenis from "lenis";
-import { useEffect } from "react";
+import useLenis from "@/lib/Lenis";
 
 export default function HomePage() {
-useEffect(()=>{
-  const len = new Lenis()
-})
-
+useLenis()
 
   return (
     <main className="bg-[#0a0a0a] min-h-screen overflow-x-hidden">

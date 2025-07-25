@@ -35,6 +35,9 @@ const Footer = () => {
     { name: "Terms of Service", href: "#terms" }
   ];
 
+  
+
+
   return (
     <footer className="relative w-full bg-[#0a0a0a] border-t border-white/10">
       {/* Background subtle gradient */}

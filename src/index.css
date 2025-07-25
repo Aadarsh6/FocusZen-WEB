@@ -5,7 +5,10 @@
 
 html, body {
   background-color: #000000; /* Ensure dark background */
-  height: 100%;
+}
+html, body {
+  height: auto;
+  overflow: hidden;
 }
 
 body {
