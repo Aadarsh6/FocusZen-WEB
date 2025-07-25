@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { motion } from "framer-motion";
 
 const NavBar = () => {
@@ -62,9 +62,13 @@ const NavBar = () => {
         <button className="hidden md:block px-5 py-2.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 font-intel font-medium hover:bg-white/20 hover:border-white/30 transition-all duration-300">
           Sign In
         </button>
+        <Link
+        to="/focusMode"
+        >
         <button className="px-5 py-2.5 rounded-lg bg-white text-black font-intel font-medium hover:bg-white/90 transition-all duration-300 shadow-lg">
           Get Started
         </button>
+        </Link>
       </div>
 
       {/* Mobile Menu Button */}

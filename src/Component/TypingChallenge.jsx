@@ -1,12 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, ArrowLeft, Type, Shield } from "lucide-react";
-import { useTheme } from "../Context";
+import { useNavigate } from "react-router-dom";
 
 const TypingChallenge = () => {
-  const navigate = useNavigate();
-  const { theme } = useTheme();
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [requirePhrase, setRequirePhrase] = useState("");
@@ -14,6 +11,7 @@ const TypingChallenge = () => {
   const [attempts, setAttempts] = useState(0);
   const [showWarning, setShowWarning] = useState(true);
   const inputRef = useRef(null);
+  const navigate = useNavigate()
 
   const exitPhrases = [
     "By typing this, I admit that short term comfort is more important to me than long term success.",
@@ -30,7 +28,6 @@ const TypingChallenge = () => {
     const randomIndex = Math.floor(Math.random() * exitPhrases.length);
     setRequirePhrase(exitPhrases[randomIndex]);
     
-    // Auto-focus input after a delay
     const timer = setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus();
@@ -40,7 +37,6 @@ const TypingChallenge = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle error animation
   useEffect(() => {
     if (error) {
       setIsShaking(true);
@@ -55,11 +51,10 @@ const TypingChallenge = () => {
     localStorage.removeItem("timeLeft");
     window.postMessage({ type: "EndFocusSession" }, "*");
     navigate("/");
+    console.log("Session ended successfully");
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = () => {
     if (input.trim() === requirePhrase) {
       setError('');
       onSuccess();
@@ -67,7 +62,7 @@ const TypingChallenge = () => {
     } else if (input === "") {
       setError("Please type the required phrase to continue");
       setAttempts(prev => prev + 1);
-    } else if (input === "Aadarsh") { // Developer bypass
+    } else if (input === "Aadarsh") {
       setError('');
       onSuccess();
       setInput("");
@@ -83,190 +78,212 @@ const TypingChallenge = () => {
     }
   };
 
-  // Theme-aware styles
-  const bgClass = theme === 'light' ? 'bg-slate-50' : 'bg-gray-950';
-  const textPrimary = theme === 'light' ? 'text-slate-800' : 'text-gray-100';
-  const textSecondary = theme === 'light' ? 'text-slate-600' : 'text-gray-400';
-  const cardBg = theme === 'light' ? 'bg-white/80 border-slate-200/50' : 'bg-gray-900/50 border-white/10';
-  const inputStyle = `w-full border rounded-xl px-4 py-3 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-400/50 ${
-    theme === 'light' 
-      ? 'bg-slate-100 text-slate-900 border-slate-300 placeholder-slate-500' 
-      : 'bg-gray-900/50 text-white border-white/10 placeholder-gray-500'
-  }`;
+  const progress = Math.min((input.length / requirePhrase.length) * 100, 100);
+  const isComplete = input === requirePhrase || input === "Aadarsh";
 
   return (
-    <div className={`min-h-screen ${bgClass} font-sans flex flex-col items-center justify-center transition-all duration-500 px-4 py-8`}>
-      
-      {/* Background Elements */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {theme === 'dark' && (
-          <>
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          </>
-        )}
-      </div>
+    <div className="min-h-screen w-full flex items-center justify-center  text-white overflow-hidden relative">
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#0d0d0d] z-0" />
 
-      {/* Main Content */}
-      <motion.div
-        className="relative z-10 w-full max-w-2xl"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
+      {/* Dotted Background */}
+      <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] opacity-20 z-0" />
+
+      <div className="relative z-10 w-full max-w-2xl mx-auto px-6">
         
         {/* Warning Header */}
         <AnimatePresence>
           {showWarning && (
             <motion.div
-              className="mb-8 p-6 rounded-2xl border backdrop-blur-sm bg-red-500/10 border-red-500/20 text-center"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.5 }}
+              className="text-center mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4, ease: [0.25, 0.8, 0.25, 1] }}
             >
-              <div className="flex items-center justify-center mb-4">
-                <Shield size={32} className="text-red-400 mr-3" />
-                <h2 className={`text-2xl font-bold ${textPrimary}`}>Focus Protection Active</h2>
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/5 backdrop-blur-sm mb-6 border border-white/10">
+                <Shield className="w-7 h-7 text-red-400" strokeWidth={1.5} />
               </div>
-              <p className={`${textSecondary} mb-4`}>
-                To exit your focus session, you must acknowledge the cost of giving up by typing the phrase below exactly as shown.
+              
+              <h1 className="text-3xl md:text-4xl font-light text-white mb-4 tracking-tight">
+                Focus Protection
+              </h1>
+              
+              <p className="text-lg text-white/60 mb-8 max-w-md mx-auto leading-relaxed font-light">
+                To exit, you must type the phrase below exactly as shown—acknowledging the cost of giving up.
               </p>
-              <button
+              
+              <motion.button
                 onClick={() => setShowWarning(false)}
-                className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
+                className="px-8 py-3 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white font-light transition-all duration-300 backdrop-blur-sm"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                I understand, continue →
-              </button>
+                Continue
+              </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Main Challenge Card */}
+        {/* Main Challenge */}
         {!showWarning && (
           <motion.div
-            className={`${cardBg} border rounded-2xl shadow-2xl backdrop-blur-sm overflow-hidden ${
-              isShaking ? 'animate-shake' : ''
-            }`}
-            initial={{ opacity: 0, y: 20 }}
+            className={`${isShaking ? 'animate-shake' : ''}`}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.4, ease: [0.25, 0.8, 0.25, 1] }}
           >
-            <div className="p-8">
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/5 backdrop-blur-sm mb-6 border border-white/10">
+                <Type className="w-6 h-6 text-white/80" strokeWidth={1.5} />
+              </div>
               
-              {/* Header */}
-              <div className="text-center mb-8">
-                <div className="flex items-center justify-center mb-4">
-                  <Type size={24} className="text-red-500 mr-3" />
-                  <h1 className={`text-2xl font-bold ${textPrimary}`}>
-                    Type to Exit Focus Mode
-                  </h1>
-                </div>
-                <p className={`${textSecondary}`}>
-                  Type the phrase below exactly as shown to exit your session
-                </p>
-              </div>
+              <h1 className="text-2xl md:text-3xl font-light text-white mb-3 tracking-tight">
+                Type to Exit
+              </h1>
+              
+              <p className="text-white/50 font-light">
+                Match the phrase exactly to continue
+              </p>
+            </div>
 
-              {/* Required Phrase Display */}
-              <div
-                onClick={handlePhraseClick}
-                className={`p-6 rounded-xl mb-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                  theme === 'light' 
-                    ? 'bg-slate-100 hover:bg-slate-200 border border-slate-300' 
-                    : 'bg-gray-800/50 hover:bg-gray-800/70 border border-white/10'
-                }`}
-              >
-                <p className={`${textPrimary} text-center font-medium leading-relaxed select-none`}>
-                  "{requirePhrase}"
-                </p>
-              </div>
+            {/* Required Phrase */}
+            <motion.div
+              onClick={handlePhraseClick}
+              className="p-8 rounded-2xl mb-8 cursor-pointer transition-all duration-300 hover:bg-white/[0.02] bg-white/[0.01] border border-white/10 backdrop-blur-sm"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+            >
+              <p className="text-white/90 text-center font-light leading-relaxed select-none text-lg">
+                "{requirePhrase}"
+              </p>
+            </motion.div>
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <textarea
-                    ref={inputRef}
-                    placeholder="Type the phrase exactly as shown above..."
-                    className={`${inputStyle} min-h-[120px] resize-none`}
-                    value={input}
-                    onCopy={(e) => e.preventDefault()}
-                    onPaste={(e) => e.preventDefault()}
-                    onCut={(e) => e.preventDefault()}
-                    onChange={(e) => setInput(e.target.value)}
-                    rows={4}
-                  />
-                  
-                  {/* Character Count */}
-                  <div className="flex justify-between items-center mt-2">
-                    <span className={`text-xs ${textSecondary}`}>
-                      {input.length} / {requirePhrase.length} characters
-                    </span>
-                    <span className={`text-xs ${
-                      input === "Aadarsh" ? 'text-green-500' : input === requirePhrase ? 'text-green-500' : textSecondary
-                    }`}>
-                      {input === "Aadarsh" ? "Welcome sir" : input === requirePhrase ? '✓ Match!' : 'Keep typing...'}
-                    </span>
+            {/* Form */}
+            <div className="space-y-6">
+              {/* Input */}
+              <div className="relative">
+                <textarea
+                  ref={inputRef}
+                  placeholder="Type the phrase here..."
+                  className="w-full border border-white/10 rounded-2xl px-6 py-6 bg-white/[0.02] text-white placeholder-white/40 min-h-[120px] resize-none transition-all duration-300 focus:outline-none focus:border-white/30 focus:bg-white/[0.03] text-base font-light leading-relaxed backdrop-blur-sm"
+                  value={input}
+                  onCopy={(e) => e.preventDefault()}
+                  onPaste={(e) => e.preventDefault()}
+                  onCut={(e) => e.preventDefault()}
+                  onChange={(e) => setInput(e.target.value)}
+                  rows={4}
+                />
+                
+                {/* Enhanced Progress Bar */}
+                <div className="mt-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-32 h-1 bg-white/10 rounded-full overflow-hidden">
+                        <motion.div 
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            isComplete 
+                              ? 'bg-gradient-to-r from-green-400 to-green-500' 
+                              : 'bg-gradient-to-r from-white/60 to-white/40'
+                          }`}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progress}%` }}
+                        />
+                      </div>
+                      <span className="text-sm text-white/50 font-light tabular-nums">
+                        {Math.round(progress)}%
+                      </span>
+                    </div>
+                    
+                    <motion.span 
+                      className={`text-sm font-light transition-all duration-300 ${
+                        input === "Aadarsh" 
+                          ? 'text-green-400' 
+                          : isComplete 
+                            ? 'text-green-400' 
+                            : 'text-white/40'
+                      }`}
+                      animate={isComplete ? { scale: [1, 1.05, 1] } : {}}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {input === "Aadarsh" 
+                        ? "✓ Access granted" 
+                        : isComplete 
+                          ? '✓ Perfect match' 
+                          : 'Keep typing...'}
+                    </motion.span>
                   </div>
                 </div>
+              </div>
 
-                {/* Error Message */}
-                <AnimatePresence>
-                  {error && (
-                    <motion.div
-                      className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg flex items-center text-sm"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                    >
-                      <AlertTriangle size={18} className="mr-3 flex-shrink-0" />
-                      <span>{error}</span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Buttons */}
-                <div className="flex gap-4">
-                  <button
-                    type="submit"
-                    disabled={!input.trim()}
-                    className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500/50"
+              {/* Error Message */}
+              <AnimatePresence>
+                {error && (
+                  <motion.div
+                    className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl flex items-start text-sm font-light backdrop-blur-sm"
+                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    Exit Focus Session
-                  </button>
-                  
-                  <Link
-                    to="/focus"
-                    className={`inline-flex items-center justify-center px-6 py-4 font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-offset-2 ${
-                      theme === 'light' 
-                        ? 'bg-slate-200 text-slate-800 hover:bg-slate-300 focus:ring-slate-400 focus:ring-offset-slate-50' 
-                        : 'bg-white/10 text-white hover:bg-white/20 focus:ring-white/50 focus:ring-offset-gray-950'
-                    } border border-white/10`}
-                  >
-                    <ArrowLeft size={20} className="mr-2" />
-                    Go Back
-                  </Link>
-                </div>
-              </form>
+                    <AlertTriangle className="w-4 h-4 mr-3 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                    <span>{error}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-              {/* Attempt Counter */}
-              {attempts > 0 && (
-                <div className="mt-6 text-center">
-                  <p className={`text-sm ${textSecondary}`}>
-                    Attempts: {attempts}
-                  </p>
-                </div>
-              )}
+              {/* Buttons */}
+              <div className="flex gap-4 pt-4">
+                <motion.button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={!input.trim()}
+                  className="flex-1 bg-white text-black font-semibold py-4 px-6 rounded-xl transition-all duration-300 focus:outline-none disabled:bg-white/20 disabled:text-white/40 disabled:cursor-not-allowed hover:bg-white/90"
+                  whileHover={input.trim() ? { scale: 1.02 } : {}}
+                  whileTap={input.trim() ? { scale: 0.98 } : {}}
+                >
+                  Exit Session
+                </motion.button>
+                
+                <motion.button
+                  type="button"
+                  onClick={() => navigate("/focus")}
+                  className="inline-flex items-center justify-center px-6 py-4 font-light rounded-xl transition-all duration-300 focus:outline-none bg-white/5 text-white/80 hover:bg-white/10 border border-white/10 backdrop-blur-sm"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" strokeWidth={1.5} />
+                  Back
+                </motion.button>
+              </div>
             </div>
+
+            {/* Attempt Counter */}
+            <AnimatePresence>
+              {attempts > 0 && (
+                <motion.div 
+                  className="mt-8 text-center"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <p className="text-sm text-white/40 font-light">
+                    Attempt {attempts}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
-      </motion.div>
+      </div>
 
       {/* Custom Animations */}
       <style jsx global>{`
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-          20%, 40%, 60%, 80% { transform: translateX(4px); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+          20%, 40%, 60%, 80% { transform: translateX(6px); }
         }
         .animate-shake {
           animation: shake 0.6s ease-in-out;

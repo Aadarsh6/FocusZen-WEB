@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 const ProblemSection = () => {
@@ -23,7 +22,7 @@ const ProblemSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Animate time wasted counter
+  // Animate time wasted counter - Made faster and smoother
   useEffect(() => {
     if (isVisible) {
       const interval = setInterval(() => {
@@ -32,9 +31,9 @@ const ProblemSection = () => {
             clearInterval(interval);
             return 1200;
           }
-          return prev + 17;
+          return prev + 25; // Increased increment for faster counting
         });
-      }, 50);
+      }, 30); // Reduced interval for smoother animation
       return () => clearInterval(interval);
     }
   }, [isVisible]);
@@ -47,7 +46,7 @@ const ProblemSection = () => {
   ];
 
   return (
-    <motion.section 
+    <section 
       ref={sectionRef}
       className="relative min-h-screen w-full bg-[#0a0a0a] flex items-center justify-center text-center overflow-hidden"
     >
@@ -67,12 +66,13 @@ const ProblemSection = () => {
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-12 text-center">
         
-        {/* Main Headline */}
-        <motion.div
-          className="mb-5 mt-15"
-          initial={{ opacity: 0, y: 40 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+        {/* Main Headline - Faster animation */}
+        <div
+          className={`mb-5 mt-15 transition-all duration-500 ease-out ${
+            isVisible 
+              ? 'opacity-100 translate-y-0' 
+              : 'opacity-0 translate-y-8'
+          }`}
         >
           <h2 className="text-4xl md:text-6xl lg:text-5xl font-jost text-white/50 font-semibold tracking-tight mb-6 leading-tight">
             The Hidden Cost of,
@@ -81,14 +81,16 @@ const ProblemSection = () => {
               Digital Distraction
             </span>
           </h2> 
-        </motion.div>
+        </div>
 
-        {/* Time Breakdown Section */}
-        <motion.div
-          className="mb-16"
-          initial={{ opacity: 0, y: 40 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+        {/* Time Breakdown Section - Reduced delay */}
+        <div
+          className={`mb-16 transition-all duration-500 ease-out ${
+            isVisible 
+              ? 'opacity-100 translate-y-0' 
+              : 'opacity-0 translate-y-8'
+          }`}
+          style={{ transitionDelay: isVisible ? '0.1s' : '0s' }}
         >
           <h3 className="text-2xl md:text-3xl font-jost font-light text-white/90 mb-16 text-center">
             A Typical Day's <span className="text-white font-medium">Interruptions</span>
@@ -96,15 +98,19 @@ const ProblemSection = () => {
           
           {/* Flowing layout */}
           <div className="max-w-2xl mx-auto space-y-12">
-            {/* Time Stats - Clean List */}
+            {/* Time Stats - Clean List with staggered but fast animations */}
             <div className="space-y-4">
               {timeStat.map((stat, index) => (
-                <motion.div
+                <div
                   key={stat.name}
-                  className="group relative text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                  transition={{ duration: 0.8, delay: 0.5 + (index * 0.2), ease: "easeOut" }}
+                  className={`group relative text-center transition-all duration-400 ease-out ${
+                    isVisible 
+                      ? 'opacity-100 translate-y-0' 
+                      : 'opacity-0 translate-y-4'
+                  }`}
+                  style={{ 
+                    transitionDelay: isVisible ? `${0.2 + (index * 0.08)}s` : '0s' 
+                  }}
                 >
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2">
                     <span className="text-white/60 text-base md:text-lg font-light tracking-wide">
@@ -125,16 +131,18 @@ const ProblemSection = () => {
                   {index < timeStat.length - 1 && (
                     <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                   )}
-                </motion.div>
+                </div>
               ))}
             </div>
             
-            {/* Total Impact */}
-            <motion.div 
-              className="text-center pt-8"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-              transition={{ duration: 1, delay: 1.2, ease: "easeOut" }}
+            {/* Total Impact - Much faster reveal */}
+            <div 
+              className={`text-center pt-8 transition-all duration-500 ease-out ${
+                isVisible 
+                  ? 'opacity-100 scale-100' 
+                  : 'opacity-0 scale-95'
+              }`}
+              style={{ transitionDelay: isVisible ? '0.5s' : '0s' }}
             >
               {/* Large number with breathing space */}
               <div>
@@ -149,16 +157,18 @@ const ProblemSection = () => {
               <p className="text-base md:text-lg text-white/50 font-light leading-relaxed max-w-md mx-auto">
                 That's <span className="text-white/80">3.3 hours daily</span> of untapped potential
               </p>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Reflection Questions */}
-        <motion.div
-          className="space-y-2 mb-12"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
+        {/* Reflection Questions - Quick final reveal */}
+        <div
+          className={`space-y-2 mb-12 transition-all duration-400 ease-out ${
+            isVisible 
+              ? 'opacity-100 translate-y-0' 
+              : 'opacity-0 translate-y-4'
+          }`}
+          style={{ transitionDelay: isVisible ? '0.4s' : '0s' }}
         >
           <p className="text-lg md:text-xl text-white/70 leading-relaxed">
             What could you create with <span className="text-white font-medium">1,200 focused hours</span>?
@@ -166,9 +176,17 @@ const ProblemSection = () => {
           <p className="text-base md:text-lg text-white/50">
             A new skill. A business. A masterpiece. A better you.
           </p>
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+
+      {/* Custom Styles */}
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap');
+        .font-jost {
+          font-family: 'Jost', sans-serif;
+        }
+      `}</style>
+    </section>
   );
 };
 
