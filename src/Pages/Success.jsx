@@ -1,16 +1,17 @@
 import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; // Import Link for navigation
 import { motion } from "framer-motion";
-import { Trophy, Sparkles, Home, RotateCcw } from "lucide-react";
-import { useTheme } from "../Context";
-import ShootConfetti from "../Component/UI/ShootConfettie";
+import { Trophy, Sparkles, Home, RotateCcw, CheckCircle, Star } from "lucide-react";
+import ShootConfetti from "@/Component/UI/ShootConfettie";
+
+
 
 const Success = () => {
-  const { theme } = useTheme();
   const confettiRef = useRef(null);
 
-  // Clear localStorage
+  // All original functionality is preserved
   useEffect(() => {
+    console.log("Clearing localStorage...");
     localStorage.removeItem("Focus.url");
     localStorage.removeItem("Focus.time");
     localStorage.removeItem("Focus.EndTime");
@@ -18,7 +19,6 @@ const Success = () => {
     localStorage.removeItem("timeLeft");
   }, []);
 
-  // Trigger confetti with proper cleanup
   useEffect(() => {
     const timer = setTimeout(() => {
       try {
@@ -26,149 +26,152 @@ const Success = () => {
       } catch (error) {
         console.error("Failed to shoot confetti:", error);
       }
-    }, 500);
+    }, 1000);
 
-    // Cleanup function
     return () => {
       clearTimeout(timer);
-      if (confettiRef.current && confettiRef.current.cleanup) {
+      if (confettiRef.current?.cleanup) {
         confettiRef.current.cleanup();
       }
     };
   }, []);
 
-  // Rest of your component remains the same...
-  const bgClass = theme === 'light' ? 'bg-slate-50' : 'bg-gray-950';
-  const textPrimary = theme === 'light' ? 'text-slate-800' : 'text-gray-100';
-  const textSecondary = theme === 'light' ? 'text-slate-600' : 'text-gray-400';
-  const accentGradient = "from-green-400 via-cyan-400 to-purple-500";
-
-
   return (
-    <div className={`min-h-screen ${bgClass} font-sans flex flex-col items-center justify-center transition-colors duration-500 overflow-hidden relative`}>
+    <div className="min-h-screen text-white font-light flex flex-col items-center justify-center overflow-hidden relative p-4">
       
-      {/* Enhanced Aurora Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        {theme === 'dark' && (
-          <>
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-            <div className="absolute top-3/4 left-3/4 w-80 h-80 bg-cyan-500/15 rounded-full blur-3xl animate-pulse delay-500"></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60rem] h-[60rem] bg-gradient-to-tr from-green-500/10 via-cyan-500/5 to-purple-500/10 rounded-full blur-3xl opacity-50 animate-spin-slow"></div>
-          </>
-        )}
-      </div>
+         <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/bg2.png')" }}
+        aria-hidden="true"
+      />
+       <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
 
-      {/* Main Content */}
+      {/* Background from the original version is kept */}
+      {/* <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:40px_40px] opacity-[0.03]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.05)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08)_0%,transparent_50%)]" />
+      </div> */}
+
+      {/* Main Content with faster animations */}
       <motion.div
-        className="relative z-10 flex flex-col items-center text-center max-w-4xl px-6"
+        className="relative z-10 flex flex-col items-center text-center max-w-4xl px-4 md:px-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         
-        {/* Success Icon with Animation */}
+        {/* Icon Complex - Slightly smaller and refined */}
         <motion.div
-          className="mb-8"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 200, damping: 10, delay: 0.3 }}
+          className="mb-10 relative"
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ 
+            type: "spring", stiffness: 120, damping: 15, delay: 0.2, duration: 1 
+          }}
         >
-          <div className="relative">
-            <Trophy size={80} className={`${textPrimary} drop-shadow-2xl`} />
+          <div className="relative flex items-center justify-center">
+            {/* Background Circle - Resized */}
+            <div className="absolute w-28 h-28 rounded-full bg-white/5 backdrop-blur-sm border border-white/10" />
+            
+            {/* Main Trophy with Amber Accent */}
+            <Trophy size={56} className="text-amber-400 relative z-10" strokeWidth={1.25} />
+            
+            {/* Floating elements are kept */}
             <motion.div
-              className="absolute -top-2 -right-2"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              className="absolute -top-3 -right-3"
+              animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+              transition={{ 
+                rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" }
+              }}
             >
-              <Sparkles size={24} className="text-yellow-400" />
+              <Sparkles size={18} className="text-amber-400/80" strokeWidth={1.5} />
+            </motion.div>
+            
+            <motion.div
+              className="absolute -bottom-2 -left-4"
+              animate={{ y: [-2, 2, -2] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Star size={14} className="text-white/60" strokeWidth={1.5} />
             </motion.div>
           </div>
         </motion.div>
 
-        {/* Main Title */}
-        <motion.h1
-          className={`text-5xl md:text-6xl lg:text-7xl font-extrabold ${textPrimary} mb-6 tracking-tight`}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-        >
-          Mission <span className={`bg-gradient-to-r ${accentGradient} bg-clip-text text-transparent`}>Accomplished!</span>
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          className={`text-xl md:text-2xl ${textSecondary} mb-12 max-w-2xl leading-relaxed`}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.8 }}
-        >
-          You've successfully completed your focus session! Your dedication to deep work is building the foundation for extraordinary achievements.
-        </motion.p>
-
-        {/* Action Buttons */}
+        {/* Main Title - Resized and with Amber accent */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 w-full max-w-md mb-12"
+          className="mb-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.8 }}
+          transition={{ delay: 0.4, duration: 0.7 }}
         >
-          {/* Primary CTA - Start New Session */}
+          <h1 className="text-5xl md:text-6xl font-light text-white mb-2 tracking-tight">
+            Mission
+          </h1>
+          <h2 className="text-5xl md:text-6xl font-semibold tracking-tight">
+            {/* Amber gradient for a premium feel */}
+            <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 bg-clip-text text-transparent">
+              Accomplished
+            </span>
+          </h2>
+        </motion.div>
+
+        {/* Subtitle with Stats - More compact */}
+        <motion.div
+          className="mb-10 space-y-5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.7 }}
+        >
+          <p className="text-lg text-white/70 max-w-2xl leading-relaxed">
+            You've successfully completed your focus session. Dedication to deep work is the foundation for extraordinary achievements.
+          </p>
+          
+          {/* Achievement Indicators - Resized */}
+          <div className="flex items-center justify-center space-x-6 pt-2">
+            <div className="text-center">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-1.5 mx-auto">
+                <CheckCircle size={18} className="text-white/80" />
+              </div>
+              <p className="text-xs text-white/60">Complete</p>
+            </div>
+            <div className="w-px h-6 bg-white/20" />
+            <div className="text-center">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-1.5 mx-auto">
+                <Star size={18} className="text-white/80" />
+              </div>
+              <p className="text-xs text-white/60">Excellence</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Action Buttons - Resized */}
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 w-full max-w-md"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.7 }}
+        >
           <Link
             to="/focusMode"
-            className="flex-1 relative group inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-2xl shadow-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-cyan-500/50 bg-gray-900/50 border border-white/10 text-white"
+            className="flex-1 group inline-flex items-center justify-center px-6 py-3.5 text-base font-medium rounded-xl transition-all duration-300 focus:outline-none bg-white text-black hover:bg-gray-200"
           >
-            <span className={`absolute -inset-0.5 rounded-2xl bg-gradient-to-r ${accentGradient} opacity-0 group-hover:opacity-75 transition-opacity duration-300 blur-sm`}></span>
-            <span className="relative flex items-center">
-              <RotateCcw size={20} className="mr-3" />
-              Start New Session
-            </span>
+            <RotateCcw size={18} className="mr-2.5 transition-transform group-hover:-rotate-45" />
+            Start New Session
           </Link>
-
-          {/* Secondary CTA - Back to Home */}
           <Link
             to="/"
-            className={`flex-1 inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-offset-2 ${
-              theme === 'light' 
-                ? 'bg-slate-200 text-slate-800 hover:bg-slate-300 focus:ring-slate-400 focus:ring-offset-slate-50' 
-                : 'bg-white/10 text-white hover:bg-white/20 focus:ring-white/50 focus:ring-offset-gray-950'
-            } border border-white/10`}
+            className="flex-1 inline-flex items-center justify-center px-6 py-3.5 text-base font-medium rounded-xl transition-colors duration-300 focus:outline-none bg-white/5 text-white/80 hover:bg-white/10 border border-white/10"
           >
-            <Home size={20} className="mr-3" />
+            <Home size={18} className="mr-2.5" />
             Back to Home
           </Link>
         </motion.div>
-
-        {/* Motivational Quote */}
-        <motion.div
-          className={`p-6 rounded-2xl border backdrop-blur-sm ${
-            theme === 'light' 
-              ? 'bg-white/50 border-slate-200/50' 
-              : 'bg-gray-900/30 border-white/10'
-          }`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.1, duration: 0.8 }}
-        >
-          <p className={`${textSecondary} text-center italic`}>
-            "Success is the sum of small efforts repeated day in and day out."
-          </p>
-          <p className={`${textSecondary} text-center text-sm mt-2`}>
-            — Robert Collier
-          </p>
-        </motion.div>
       </motion.div>
 
-      {/* Custom Animations */}
-      <style jsx global>{`
-        @keyframes spin-slow {
-          from { transform: translate(-50%, -50%) rotate(0deg); }
-          to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 45s linear infinite;
-        }
-      `}</style>
+      {/* Subtle Vignette */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_60%,rgba(0,0,0,0.5)_100%)]" />
     </div>
   );
 };

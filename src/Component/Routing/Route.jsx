@@ -19,6 +19,7 @@ const AppRoute = () => {
         <Route path="/type" element={<TypingChallenge />} />
         <Route path="/Statics" element={<Statics />} />
         <Route path="/focus" element={<Focus />} />
+        <Route path="/settings" element={<Statics />} />
         {/* <Route path="/a" element={<FeatureSection />} /> */}
       </Routes>
     </div>
