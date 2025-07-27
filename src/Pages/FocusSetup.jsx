@@ -82,11 +82,16 @@ const FocusSetup = () => {
       {/* Reduced top and bottom padding */}
       <section className="relative min-h-screen w-full bg-[#0a0a0a] flex items-center justify-center text-center overflow-hidden pt-28 pb-16">
         
-        <div
+        {/* <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/bg3.jpg')" }}
           aria-hidden="true"
-        />
+        /> */}
+
+          <div className="absolute inset-0 bg-[#0d0d0d] z-0" />
+
+      {/* Dotted Background */}
+      <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] opacity-20 z-0" />
         <div className="absolute inset-0 bg-black/30" aria-hidden="true" />
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(0,0,0,0.65))]"

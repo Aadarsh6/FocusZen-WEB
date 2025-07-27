@@ -8,6 +8,7 @@ import {
   ExternalLink,
   Heart
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const socialLinks = [
@@ -216,9 +217,13 @@ const Footer = () => {
           </div>
           
           <div className="flex items-center text-white/40 text-sm">
-            <span>Made with</span>
-            <Heart className="w-4 h-4 mx-1 text-red-400 fill-current" />
-            <span>by Adarsh</span>
+            <span>Made by {" "}
+                <Link
+                to="https://x.com/adarshx_23"
+                >
+            <span className="hover:text-blue-400 underline">Adarsh</span>
+            </Link>
+ </span>
           </div>
         </motion.div>
       </div>

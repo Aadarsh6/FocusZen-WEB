@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import NavBar from "@/Component/NavBar"; // Import the NavBar
+import NavBar from "@/Component/NavBar";
 import { Link } from "react-router-dom";
+import { Download } from "lucide-react"; // Added an icon for visual enhancement
 
 const HeroSection = () => {
   return (
@@ -9,68 +10,65 @@ const HeroSection = () => {
       role="banner"
       aria-label="FocusZen hero section"
     >
-      {/* NavBar is placed here to be positioned relative to the HeroSection */}
       <NavBar />
 
-      {/* Background Image */}
+      {/* Background elements remain unchanged */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-90"
         style={{ backgroundImage: "url('/bg2.png')" }}
         aria-hidden="true"
       />
-
-      {/* Dim overlay */}
-      <div className="absolute inset-0 bg-black/30" aria-hidden="true" />
-
-      {/* Radial vignette */}
+      <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(0,0,0,0.65))]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.75))]"
         aria-hidden="true"
       />
 
-      {/* Content */}
+      {/* Content with faster, snappier animations */}
       <motion.div
-        className="relative z-10 max-w-xl px-4 text-white/90"
-        initial={{ opacity: 0, y: 30 }}
+        className="relative z-10 max-w-2xl px-4 text-white" // Increased max-w slightly for better balance
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: "easeOut" }} // Faster load
       >
         <motion.h1
-          className="font-jost text-4xl md:text-6xl font-semibold tracking-tight mb-6 leading-tight"
+          className="font-jost text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 leading-tight text-gray-100"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
         >
           Enter Deep Focus
         </motion.h1>
 
         <motion.p
-          className="text-lg md:text-xl leading-relaxed font-intel"
+          className="text-lg md:text-xl leading-relaxed text-gray-300 font-light"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
         >
           Silence the noise. <br /> Let your higher mind take over.
         </motion.p>
 
+        {/* Slightly cleaner and more robust CTA structure */}
         <motion.div
-          className="mt-6 flex flex-col sm:flex-row gap-4 justify-center"
+          className="mt-8 flex flex-col items-center justify-center gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
         >
-          <div className="flex flex-col gap-3 items-center">
-            <Link
-            
-           to="focusMode" >
-            <button className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition">
+          <Link to="/focus-setup" className="w-full max-w-xs sm:max-w-none">
+            <button className="w-full px-8 py-3.5 rounded-xl bg-white text-black text-base font-semibold hover:bg-gray-200 transition-colors duration-300 shadow-lg">
               Start a Focus Session
             </button>
-            </Link>
-            <a href="#" className="text-md text-white/50 hover:text-white/90 hover:underline">
-              Download Extension
-            </a>
-          </div>
+          </Link>
+          
+          <a 
+            href="#" // Replace with your actual download link
+            className="group inline-flex items-center text-sm text-gray-400 hover:text-white transition-colors duration-300"
+          >
+            <Download size={14} className="mr-2 opacity-70 transition-opacity group-hover:opacity-100" />
+            Download Extension
+          </a>
         </motion.div>
       </motion.div>
     </section>
