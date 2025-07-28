@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 const Statics = () => {
   return (
     <div className="w-full flex justify-center items-center h-screen ">
-         <div className="absolute inset-0 bg-[#0d0d0d] z-0" />
+         <div className="absolute inset-0 bg-[#00000] z-0" />
 
       {/* Dotted Background */}
       <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] opacity-20 z-0"/>
