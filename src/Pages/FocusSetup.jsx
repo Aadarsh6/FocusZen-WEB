@@ -22,8 +22,10 @@ const FocusSetup = () => {
     if (value && !value.includes(".") && !value.endsWith(".com")) {
       setActiveSuggestionIndex(index);
       setShowSuggestion(true);
+      // setError(`Please enter a proper url. eg: "Youtube.com"`)
     } else {
       setShowSuggestion(false);
+      setError("")
     }
   };
 
@@ -54,6 +56,16 @@ const FocusSetup = () => {
       setError("Please enter at least one website URL to allow.");
       return;
     }
+
+    const hasInvalidUrl = validUserUrls.some(url => !url.includes("."));
+    if(hasInvalidUrl){
+      setError(`Please enter a proper url. eg: "Youtube.com"`)
+      return;
+    }
+    // if (validUserUrls && !validUserUrls.includes(".") && !validUserUrls.endsWith(".com")) {
+    //   setError(`Please enter a proper url. eg: "Youtube.com"`)
+    //   return;
+    // }
     
     if (!time || time <= 0) {
       setError("Session duration must be at least 1 minute.");
