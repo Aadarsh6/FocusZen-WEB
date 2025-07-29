@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertTriangle, ArrowLeft, Type, Shield } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { AlertTriangle, ArrowLeft, Type, Shield, Backpack } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 // A consistent, smooth transition object to be reused
 const smoothTransition = { duration: 0.35, ease: "easeInOut" };
@@ -98,14 +98,29 @@ const TypingChallenge = () => {
               <p className="text-lg text-white/60 mb-8 max-w-md mx-auto leading-relaxed font-light">
                 To exit, you must type the phrase below exactly as shown—acknowledging the cost of giving up.
               </p>
-              <motion.button
-                onClick={() => setShowWarning(false)}
-                className="px-8 py-3 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white font-light transition-colors duration-300 backdrop-blur-sm"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                Continue
-              </motion.button>
+<div className="flex flex-col justify-center items-center">
+  <motion.button
+    onClick={() => setShowWarning(false)}
+    className="px-8 py-3 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white font-light transition-colors duration-300 backdrop-blur-sm"
+    whileHover={{ scale: 1.03 }}
+    whileTap={{ scale: 0.97 }}
+  >
+    Continue
+  </motion.button>
+
+  <Link
+  to="/focus"
+  >
+  <motion.button
+    whileHover={{ scale: 1.03 }}
+    whileTap={{ scale: 0.97 }}
+    className="mt-4 underline text-white/60 font-light"
+  >
+    Go back
+  </motion.button>
+  </Link>
+</div>
+
             </motion.div>
           ) : (
             <motion.div
