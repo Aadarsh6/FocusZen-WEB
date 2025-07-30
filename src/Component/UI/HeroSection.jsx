@@ -56,7 +56,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
         >
-          <Link to="/focus-setup" className="w-full max-w-xs sm:max-w-none">
+          <Link to="/focusMode" className="w-full max-w-xs sm:max-w-none">
             <button className="w-full px-8 py-3.5 rounded-xl bg-white text-black text-base font-semibold hover:bg-gray-200 transition-colors duration-300 shadow-lg">
               Start a Focus Session
             </button>
