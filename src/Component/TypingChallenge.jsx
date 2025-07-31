@@ -232,7 +232,7 @@ const TypingChallenge = () => {
         </AnimatePresence>
       </div>
 
-      <style jsx global>{`
+      <style >{`
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
           10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }

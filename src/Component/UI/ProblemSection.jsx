@@ -141,7 +141,7 @@ const ProblemSection = () => {
       </motion.div>
 
       {/* Custom Styles can remain as they are for the font */}
-      <style jsx>{`
+      <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap');
         .font-jost {
           font-family: 'Jost', sans-serif;
