@@ -8,8 +8,9 @@ import useLenis from "@/lib/Lenis";
 export default function HomePage() {
 useLenis()
 
-  return (
+return (
     <main className="bg-[#0a0a0a] min-h-screen overflow-x-hidden">
+      
       <HeroSection />
       <ProblemSection />
       <FeatureSection />

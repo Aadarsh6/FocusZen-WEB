@@ -1,16 +1,20 @@
-import { BrowserRouter} from "react-router-dom";
+import { BrowserRouter, Router } from "react-router-dom";
 import AppRoute from "./Component/Routing/Route";
-import { SpeedInsights } from "@vercel/speed-insights/react"
+// import { SpeedInsights } from "@vercel/speed-insights/react"
+import { FocusSessionProvider } from "./Context/FocusSessionProvider";
 
 const App = () => {
   return (
     <div>
+      
+      {/* <SpeedInsights/> */}
       <BrowserRouter>
-      <SpeedInsights/>
+      <FocusSessionProvider>
         <AppRoute/>
-      </BrowserRouter>
+        </FocusSessionProvider>
+        </BrowserRouter>
+      
     </div>
   );
 };
-
 export default App;

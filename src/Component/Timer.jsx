@@ -44,6 +44,7 @@
     useEffect(() => {
       if (timeLeft === 0) {
         setIsRunning(false);
+        localStorage.removeItem("timeLeft");;
         onComplete();
         setIsAnimating(true);
         setTimeout(() => setIsAnimating(false), 3000);

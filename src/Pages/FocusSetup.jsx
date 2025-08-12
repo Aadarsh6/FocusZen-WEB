@@ -3,9 +3,11 @@ import { X, Plus, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import NavBar from "../Component/NavBar";
+import { useFocusSession } from "@/Context/FocusSessionProvider";
 
 const FocusSetup = () => {
   const navigate = useNavigate();
+  const { startSession } = useFocusSession(); // Use the context
   const [urls, setUrls] = useState([""]);
   const [time, setTime] = useState("");
   const [error, setError] = useState("");
@@ -22,7 +24,6 @@ const FocusSetup = () => {
     if (value && !value.includes(".") && !value.endsWith(".com")) {
       setActiveSuggestionIndex(index);
       setShowSuggestion(true);
-      // setError(`Please enter a proper url. eg: "Youtube.com"`)
     } else {
       setShowSuggestion(false);
       setError("")
@@ -47,43 +48,64 @@ const FocusSetup = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const hiddenUrl = ["https://focuszen.vercel.app/", "http://localhost:"];
-    const validUserUrls = urls.filter(url => url.trim() !== "");
     
-    if (validUserUrls.length === 0) {
-      setError("Please enter at least one website URL to allow.");
-      return;
-    }
-
-    const hasInvalidUrl = validUserUrls.some(url => !url.includes("."));
-    if(hasInvalidUrl){
-      setError(`Please enter a proper url. eg: "Youtube.com"`)
-      return;
-    }
-    // if (validUserUrls && !validUserUrls.includes(".") && !validUserUrls.endsWith(".com")) {
-    //   setError(`Please enter a proper url. eg: "Youtube.com"`)
-    //   return;
-    // }
+    setError("");
+    console.log("🚀 Form submitted");
     
-    if (!time || time <= 0) {
-      setError("Session duration must be at least 1 minute.");
-      setTime(1);
-      return;
+    try {
+      const hiddenUrl = ["https://focuszen.vercel.app/", "http://localhost:"];
+      const validUserUrls = urls.filter(url => url.trim() !== "");
+      
+      // Validation
+      if (validUserUrls.length === 0) {
+        setError("Please enter at least one website URL to allow.");
+        return;
+      }
+
+      const hasInvalidUrl = validUserUrls.some(url => !url.includes("."));
+      if (hasInvalidUrl) {
+        setError(`Please enter a proper url. eg: "Youtube.com"`);
+        return;
+      }
+      
+      if (!time || time <= 0) {
+        setError("Session duration must be at least 1 minute.");
+        setTime(1);
+        return;
+      }
+
+      const allValidUrls = [...validUserUrls, ...hiddenUrl];
+      const focusTime = parseInt(time);
+
+      console.log("💾 Starting session with:", { allValidUrls, focusTime });
+
+      // Use the context method to start session
+      startSession(allValidUrls, focusTime, ()=>{
+        console.log(' Session started, now navigating to /focus');
+        navigate("/focus", {replace:true})
+        
+      });
+
+      // Send message to extension (if needed)
+      if (window.postMessage) {
+        window.postMessage({
+          type: "FocusSessionData",
+          allowedSites: allValidUrls,
+          focusTime: focusTime
+        }, "*");
+      }
+
+      console.log("🧭 Navigating to /focus");
+
+      // Navigate to focus page
+      navigate("/focus", { replace: true });
+
+    } catch (error) {
+      console.error("❌ Error during form submission:", error);
+      setError("An error occurred. Please try again.");
     }
-
-    const allValidUrls = [...validUserUrls, ...hiddenUrl];
-    const focusTime = parseInt(time);
-    const startTime = Date.now();
-    const endTime = startTime + focusTime * 60 * 1000;
-
-    localStorage.setItem("Focus.url", JSON.stringify(allValidUrls));
-    localStorage.setItem("Focus.time", focusTime);
-    localStorage.setItem("Focus.StartTime", startTime);
-    localStorage.setItem("Focus.EndTime", endTime);
-    
-    navigate("/focus");
   };
 
   const timeOptions = [30, 45, 60, 90, 120];
@@ -91,19 +113,10 @@ const FocusSetup = () => {
   return (
     <>
       <NavBar />
-      {/* Reduced top and bottom padding */}
       <section className="relative min-h-screen w-full bg-[#0a0a0a] flex items-center justify-center text-center overflow-hidden pt-28 pb-16">
         
-        {/* <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/bg3.jpg')" }}
-          aria-hidden="true"
-        /> */}
-
-          <div className="absolute inset-0 bg-[#0d0d0d] z-0" />
-
-      {/* Dotted Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] opacity-20 z-0" />
+        <div className="absolute inset-0 bg-[#0d0d0d] z-0" />
+        <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] opacity-20 z-0" />
         <div className="absolute inset-0 bg-black/30" aria-hidden="true" />
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(0,0,0,0.65))]"
@@ -117,7 +130,6 @@ const FocusSetup = () => {
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
 
-          {/* Reduced margin bottom and font sizes */}
           <motion.div
             className="text-center mb-10"
             initial={{ opacity: 0, y: 20 }}
@@ -132,7 +144,6 @@ const FocusSetup = () => {
             </p>
           </motion.div>
 
-          {/* Reduced space between form sections */}
           <motion.form 
             onSubmit={handleSubmit} 
             className="space-y-8 max-w-xl mx-auto"
@@ -141,7 +152,6 @@ const FocusSetup = () => {
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
             
-            {/* Reduced space inside section */}
             <div className="space-y-5">
               <h2 className="text-xl font-jost font-medium text-white/90 text-center">
                 Allowed <span className="text-white font-medium">Websites</span>
@@ -160,7 +170,6 @@ const FocusSetup = () => {
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     >
                       <input
-                        // Reduced vertical padding (py-2.5)
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-4 pr-10 py-2.5 text-white placeholder-white/40 focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all duration-300"
                         type="text"
                         placeholder="e.g., wikipedia.org"
@@ -227,7 +236,6 @@ const FocusSetup = () => {
                     <button
                       key={option}
                       type="button"
-                      // Reduced padding and font size
                       className={`py-2.5 rounded-lg text-xs font-medium transition-all duration-300 focus:outline-none ${
                         time === option && !customTimeActive
                           ? 'bg-white text-black font-semibold'
@@ -281,7 +289,6 @@ const FocusSetup = () => {
             >
               <button
                 type="submit"
-                // Reduced padding and font size
                 className="w-full px-8 py-3 rounded-full bg-white text-black font-semibold hover:bg-white/90 transition-all duration-300 text-base shadow-lg shadow-white/10 hover:scale-105"
               >
                 Start Focus Session

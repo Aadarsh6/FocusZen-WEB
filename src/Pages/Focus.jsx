@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Timer from "../Component/Timer";
+import { useFocusSession } from "@/Context/FocusSessionProvider";
+// import { completeSession } from "@/Context/FocusSessionProvider";
 
 const Focus = () => {
   const navigate = useNavigate();
@@ -8,6 +10,8 @@ const Focus = () => {
 
   const urls = JSON.parse(localStorage.getItem("Focus.url") || "[]");
   const time = parseInt(localStorage.getItem("Focus.time") || "0");
+
+  const { completeSession } = useFocusSession()
 
   // 🔁 Send focus session data to extension
   useEffect(() => {
@@ -39,7 +43,7 @@ const Focus = () => {
 
     const audio = new Audio("/sound.wav");
     audio.play().catch(err => console.log("🔇 Audio play error:", err));
-
+    completeSession()
     navigate("/success");
   };
 
