@@ -122,15 +122,6 @@ const TypingChallenge = () => {
               </div>
               <h1 className="text-3xl md:text-4xl font-light text-white mb-4 tracking-tight">Focus Protection</h1>
               
-              {/* Show remaining time */}
-              {timeRemaining > 0 && (
-                <div className="mb-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                  <p className="text-amber-400 text-sm">
-                    ⏰ Time remaining: <span className="font-mono font-bold">{formatTime(Math.floor(timeRemaining / 1000))}</span>
-                  </p>
-                </div>
-              )}
-              
               <p className="text-lg text-white/60 mb-8 max-w-md mx-auto leading-relaxed font-light">
                 To exit, you must type the phrase below exactly as shown—acknowledging the cost of giving up.
               </p>
