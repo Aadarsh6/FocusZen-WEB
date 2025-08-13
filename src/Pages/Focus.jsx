@@ -8,7 +8,7 @@ const Focus = () => {
   const [wrongTab, setWrongTab] = useState(false);
   const { completeSession, urls, duration, status } = useFocusSession();
 
-  console.log("🎯 Focus component loaded:", { urls, duration, status });
+  console.log(" Focus component loaded:", { urls, duration, status });
 
   // Send focus session data to extension when component mounts or session changes
   useEffect(() => {
@@ -21,7 +21,7 @@ const Focus = () => {
       };
       
       window.postMessage(sessionData, "*");
-      console.log("📤 Posted focus session data to extension:", sessionData);
+      console.log(" Posted focus session data to extension:", sessionData);
     }
   }, [urls, duration, status]);
 
@@ -51,7 +51,7 @@ const Focus = () => {
       
       // Only set wrongTab if we're not on an allowed page and not already showing the warning
       if (!isAllowed && !wrongTab) {
-        console.log("⚠️ Current page not in allowed list:", currentUrl);
+        console.log(" Current page not in allowed list:", currentUrl);
         // Don't automatically show wrong tab for the focus page itself
         // Let the extension handle this logic
       }
@@ -67,7 +67,7 @@ const Focus = () => {
   // Handle session completion
   const handleTimerComplete = () => {
     try {
-      console.log("⏰ Timer completed in Focus page");
+      console.log("Timer completed in Focus page");
       
       // Notify extension that session is ending
       window.postMessage({
@@ -80,16 +80,16 @@ const Focus = () => {
         const audio = new Audio("/sound.wav");
         audio.play().catch(err => console.log("🔇 Audio play failed:", err.message));
       } catch (audioError) {
-        console.log("🔇 Audio initialization failed:", audioError.message);
+        console.log("Audio initialization failed:", audioError.message);
       }
       
-      // Complete the session - this will trigger the route guard to redirect
+      // this will trigger the route guard to redirect
       completeSession();
       
       console.log("✅ Session completion handled, route guard will redirect");
       
     } catch (error) {
-      console.error("❌ Error handling timer completion:", error);
+      console.error(" Error handling timer completion:", error);
       
       // Fallback: direct navigation if completion fails
       setTimeout(() => {
@@ -98,16 +98,6 @@ const Focus = () => {
     }
   };
 
-  // Handle early session termination
-  const handleSessionEnd = () => {
-    console.log("🛑 Session ended early by user");
-    
-    // Notify extension
-    window.postMessage({
-      type: "EndFocusSession",
-      reason: "terminated"
-    }, "*");
-  };
 
   // Cleanup when component unmounts
   useEffect(() => {
@@ -120,8 +110,7 @@ const Focus = () => {
         }, "*");
       }
     };
-  }, []); // Empty dependency array - only run on unmount
-
+  }, []); 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center text-white bg-[#030b13] overflow-hidden">
       {/* Dark Base Background */}
@@ -153,8 +142,6 @@ const Focus = () => {
         </div>
       )}
 
-      {/* Session Status Indicator - Bottom of screen */}
-      
     </div>
   );
 };

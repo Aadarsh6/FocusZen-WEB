@@ -11,6 +11,13 @@ const Success = () => {
 
 
   useEffect(() => {
+
+    const audio = new Audio("./sound.wav");
+    audio.play().catch(e => {
+      console.error("Audio paly failed", e)
+    });
+
+
     const timer = setTimeout(() => {
       try {
         confettiRef.current = ShootConfetti();

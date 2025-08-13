@@ -89,16 +89,6 @@ const TypingChallenge = () => {
   const progress = Math.min((input.length / (requirePhrase.length || 1)) * 100, 100);
   const isComplete = input === requirePhrase || input === "Aadarsh";
 
-  const formatTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-    
-    if (hours > 0) {
-      return `${hours}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-    }
-    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-  };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center text-white overflow-hidden relative">
@@ -164,13 +154,6 @@ const TypingChallenge = () => {
                 <h1 className="text-2xl md:text-3xl font-light text-white mb-2 tracking-tight">Type to Exit</h1>
                 <p className="text-white/50 font-light">Match the phrase exactly to continue</p>
                 
-                {/* Show remaining time in header */}
-                {timeRemaining > 0 && (
-                  <div className="mt-3 inline-flex items-center space-x-2 text-sm text-white/60">
-                    <span>⏰</span>
-                    <span className="font-mono">{formatTime(Math.floor(timeRemaining / 1000))} remaining</span>
-                  </div>
-                )}
               </div>
 
               {/* Required Phrase */}
