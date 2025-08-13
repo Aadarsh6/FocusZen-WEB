@@ -10,62 +10,117 @@ const Focus = () => {
 
   console.log("🎯 Focus component loaded:", { urls, duration, status });
 
-  // Send focus session data to extension
+  // Send focus session data to extension when component mounts or session changes
   useEffect(() => {
     if (urls.length > 0 && duration > 0) {
-      window.postMessage({
+      const sessionData = {
         type: "FocusSessionData",
         allowedSites: urls,
         focusTime: duration,
-      }, "*");
-      console.log("📤 Posted focus session data to extension:", urls, duration);
+        status: status
+      };
+      
+      window.postMessage(sessionData, "*");
+      console.log("📤 Posted focus session data to extension:", sessionData);
     }
-  }, [urls, duration]);
+  }, [urls, duration, status]);
 
-  // Check if current tab is allowed (for in-app focus reminder)
+  // Listen for messages from extension
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (event.data.type === "FOCUS_SESSION_VIOLATED") {
+        console.log("🚫 Focus session violation detected");
+        setWrongTab(true);
+        setTimeout(() => setWrongTab(false), 3000); // Auto-hide after 3 seconds
+      } else if (event.data.type === "FOCUS_SESSION_COMPLIANT") {
+        setWrongTab(false);
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
+  // Check if current tab is allowed (backup check for in-app detection)
   useEffect(() => {
     if (urls.length === 0) return;
     
-    const checkTab = setInterval(() => {
-      const currentTab = window.location.href;
-      const isAllowed = urls.some((url) => currentTab.includes(url));
-      setWrongTab(!isAllowed);
-    }, 1000);
+    const checkCurrentPage = () => {
+      const currentUrl = window.location.href;
+      const isAllowed = urls.some((url) => currentUrl.includes(url));
+      
+      // Only set wrongTab if we're not on an allowed page and not already showing the warning
+      if (!isAllowed && !wrongTab) {
+        console.log("⚠️ Current page not in allowed list:", currentUrl);
+        // Don't automatically show wrong tab for the focus page itself
+        // Let the extension handle this logic
+      }
+    };
     
-    return () => clearInterval(checkTab);
-  }, [urls]);
+    // Check immediately and then periodically
+    checkCurrentPage();
+    const interval = setInterval(checkCurrentPage, 5000); // Check every 5 seconds
+    
+    return () => clearInterval(interval);
+  }, [urls, wrongTab]);
 
   // Handle session completion
   const handleTimerComplete = () => {
     try {
-      console.log("⏰ Timer completed");
+      console.log("⏰ Timer completed in Focus page");
       
-      // Notify extension
+      // Notify extension that session is ending
       window.postMessage({
-        type: "EndFocusSession"
+        type: "EndFocusSession",
+        reason: "completed"
       }, "*");
 
-      // Play completion sound
-      const audio = new Audio("/sound.wav");
-      audio.play().catch(err => console.log("🔇 Audio play error:", err));
+      // Play completion sound (with error handling)
+      try {
+        const audio = new Audio("/sound.wav");
+        audio.play().catch(err => console.log("🔇 Audio play failed:", err.message));
+      } catch (audioError) {
+        console.log("🔇 Audio initialization failed:", audioError.message);
+      }
       
-      // Update session state to complete - this will trigger route guard
+      // Complete the session - this will trigger the route guard to redirect
       completeSession();
       
-      console.log("✅ Session completed, route guard should handle redirect");
+      console.log("✅ Session completion handled, route guard will redirect");
       
     } catch (error) {
-      console.error("❌ Error completing session:", error);
-      // Fallback navigation
-      navigate("/success", { replace: true });
+      console.error("❌ Error handling timer completion:", error);
+      
+      // Fallback: direct navigation if completion fails
+      setTimeout(() => {
+        navigate("/success", { replace: true });
+      }, 1000);
     }
   };
 
-  const handleTimerReset = () => {
+  // Handle early session termination
+  const handleSessionEnd = () => {
+    console.log("🛑 Session ended early by user");
+    
+    // Notify extension
     window.postMessage({
-      type: "EndFocusSession"
+      type: "EndFocusSession",
+      reason: "terminated"
     }, "*");
   };
+
+  // Cleanup when component unmounts
+  useEffect(() => {
+    return () => {
+      // Only send end session if we're not completing normally
+      if (status === 'active' || status === 'paused') {
+        window.postMessage({
+          type: "EndFocusSession",
+          reason: "navigation"
+        }, "*");
+      }
+    };
+  }, []); // Empty dependency array - only run on unmount
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center text-white bg-[#030b13] overflow-hidden">
@@ -77,17 +132,39 @@ const Focus = () => {
 
       {/* Timer Component */}
       <div className="w-full z-10">
-        <Timer 
-          initialTimer={duration * 60} 
-          onComplete={handleTimerComplete} 
-          onReset={handleTimerReset} 
-        />
+        <Timer onComplete={handleTimerComplete} />
       </div>
 
-      {/* Wrong Tab Overlay */}
+      {/* Wrong Tab Overlay - Enhanced */}
       {wrongTab && (
-        <div className="fixed top-0 left-0 w-full h-full bg-red-900/70 flex justify-center items-center text-3xl font-bold z-50">
-          STAY FOCUSED!
+        <div className="fixed inset-0 bg-red-900/80 backdrop-blur-sm flex flex-col justify-center items-center text-center z-50 p-8">
+          <div className="bg-black/50 rounded-2xl p-8 border border-red-500/50">
+            <div className="text-6xl mb-4">🚫</div>
+            <h2 className="text-3xl font-bold mb-4">STAY FOCUSED!</h2>
+            <p className="text-lg text-red-200 mb-6 max-w-md">
+              You've navigated away from your allowed websites. 
+              Return to your focus zone to continue your session.
+            </p>
+            <div className="flex items-center justify-center space-x-2 text-red-300">
+              <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+              <span className="text-sm">Focus session still active</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Session Status Indicator - Bottom of screen */}
+      {status && (
+        <div className="fixed bottom-4 right-4 z-40">
+          <div className={`px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm border ${
+            status === 'active' 
+              ? 'bg-green-900/50 text-green-200 border-green-500/30' 
+              : status === 'paused'
+              ? 'bg-yellow-900/50 text-yellow-200 border-yellow-500/30'
+              : 'bg-gray-900/50 text-gray-200 border-gray-500/30'
+          }`}>
+            Session: {status.charAt(0).toUpperCase() + status.slice(1)}
+          </div>
         </div>
       )}
     </div>

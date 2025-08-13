@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState, useCallback } from "react"
 import { Navigate } from "react-router-dom";
 
 const FocusSessionContext = createContext()
@@ -7,54 +7,135 @@ export const FocusSessionProvider = ({ children }) => {
     const [sessionState, setSessionState] = useState({
         status: 'idle', // 'idle' | 'active' | 'paused' | 'complete'
         urls: [],
-        duration: 0,
-        timeRemaining: 0,
+        duration: 0, // original duration in minutes
+        timeRemaining: 0, // calculated time remaining in seconds
         startTime: null,
-        endTime: null
+        endTime: null,
+        pausedAt: null,
+        totalPausedTime: 0
     });
 
     const [isLoading, setIsLoading] = useState(true);
 
+    // Calculate time remaining based on current time and session state
+    const calculateTimeRemaining = useCallback((sessionData) => {
+        if (!sessionData.startTime || !sessionData.endTime) return 0;
+        
+        const now = Date.now();
+        
+        // If session is paused, calculate time remaining as of pause time
+        if (sessionData.status === 'paused' && sessionData.pausedAt) {
+            const timeElapsedBeforePause = sessionData.pausedAt - sessionData.startTime - sessionData.totalPausedTime;
+            const originalDurationMs = sessionData.duration * 60 * 1000;
+            return Math.max(0, Math.floor((originalDurationMs - timeElapsedBeforePause) / 1000));
+        }
+        
+        // For active sessions, calculate based on adjusted end time (accounting for pauses)
+        const adjustedEndTime = sessionData.endTime + sessionData.totalPausedTime;
+        const timeRemainingMs = Math.max(0, adjustedEndTime - now);
+        return Math.floor(timeRemainingMs / 1000);
+    }, []);
+
+    // Update time remaining for active sessions
+    useEffect(() => {
+        let interval;
+        
+        if (sessionState.status === 'active' && sessionState.startTime && sessionState.endTime) {
+            interval = setInterval(() => {
+                setSessionState(prevState => {
+                    const newTimeRemaining = calculateTimeRemaining(prevState);
+                    
+                    // Auto-complete if time is up
+                    if (newTimeRemaining === 0 && prevState.status === 'active') {
+                        console.log("⏰ Timer reached zero, auto-completing session");
+                        // Don't call completeSession here to avoid recursion
+                        // Just update the status, the useEffect below will handle completion
+                        return {
+                            ...prevState,
+                            status: 'complete',
+                            timeRemaining: 0
+                        };
+                    }
+                    
+                    return {
+                        ...prevState,
+                        timeRemaining: newTimeRemaining
+                    };
+                });
+            }, 1000);
+        }
+        
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [sessionState.status, sessionState.startTime, sessionState.endTime, calculateTimeRemaining]);
+
+    // Handle completion cleanup
+    useEffect(() => {
+        if (sessionState.status === 'complete') {
+            console.log("🏁 Session completed, cleaning up localStorage");
+            setTimeout(() => {
+                localStorage.removeItem("Focus.sessionData");
+            }, 100);
+        }
+    }, [sessionState.status]);
+
     // Initialize session state from localStorage
     useEffect(() => {
-        const savedUrl = localStorage.getItem("Focus.url");
-        const savedTime = localStorage.getItem("Focus.time");
-        const savedStartTime = localStorage.getItem("Focus.StartTime");
-        const savedEndTime = localStorage.getItem("Focus.EndTime");
-
-        console.log("🔍 Initializing from localStorage:", { savedUrl, savedTime, savedStartTime, savedEndTime });
-
-        if (savedUrl && savedTime && savedStartTime && savedEndTime) {
-            const now = Date.now();
-            const endTime = parseInt(savedEndTime);
-            const startTime = parseInt(savedStartTime);
+        try {
+            const savedSessionData = localStorage.getItem("Focus.sessionData");
             
-            let status = 'idle';
-            if (now < endTime) {
-                status = 'active';
-            } else {
-                status = 'complete';
+            if (savedSessionData) {
+                const parsedData = JSON.parse(savedSessionData);
+                console.log("🔍 Initializing from localStorage:", parsedData);
+                
+                const now = Date.now();
+                const timeRemaining = calculateTimeRemaining(parsedData);
+                
+                let status = parsedData.status;
+                
+                // Determine current status based on time
+                if (parsedData.status === 'active') {
+                    if (timeRemaining <= 0) {
+                        status = 'complete';
+                    }
+                } else if (parsedData.status === 'paused') {
+                    // Keep paused status but update time remaining
+                    status = 'paused';
+                }
+                
+                const newState = {
+                    ...parsedData,
+                    status,
+                    timeRemaining
+                };
+                
+                console.log("✅ Session state initialized:", newState);
+                setSessionState(newState);
             }
-
-            const newState = {
-                status,
-                urls: JSON.parse(savedUrl),
-                duration: parseInt(savedTime),
-                timeRemaining: Math.max(0, endTime - now),
-                startTime,
-                endTime
-            };
-            
-            console.log("✅ Session state initialized:", newState);
-            setSessionState(newState);
+        } catch (error) {
+            console.error("❌ Error loading session data:", error);
+            localStorage.removeItem("Focus.sessionData");
         }
         
         setIsLoading(false);
-    }, []);
+    }, [calculateTimeRemaining]);
+
+    // Save session state to localStorage whenever it changes (except during loading)
+    useEffect(() => {
+        if (!isLoading && sessionState.status !== 'idle') {
+            try {
+                localStorage.setItem("Focus.sessionData", JSON.stringify(sessionState));
+                console.log("💾 Session state saved:", sessionState);
+            } catch (error) {
+                console.error("❌ Error saving session data:", error);
+            }
+        }
+    }, [sessionState, isLoading]);
 
     const startSession = (urls, duration) => {
         const startTime = Date.now();
-        const endTime = Date.now() + duration * 60 * 1000;
+        const endTime = startTime + duration * 60 * 1000;
 
         const newState = {
             status: 'active',
@@ -62,52 +143,57 @@ export const FocusSessionProvider = ({ children }) => {
             duration,
             timeRemaining: duration * 60,
             startTime,
-            endTime
+            endTime,
+            pausedAt: null,
+            totalPausedTime: 0
         };
         
         console.log("🚀 Starting session:", newState);
-        
-        // Save to localStorage
-        localStorage.setItem("Focus.url", JSON.stringify(urls));
-        localStorage.setItem("Focus.time", duration.toString());
-        localStorage.setItem("Focus.StartTime", startTime.toString());
-        localStorage.setItem("Focus.EndTime", endTime.toString());
-        
-        // Update state
         setSessionState(newState);
     };
 
     const pauseSession = () => {
-        setSessionState(prev => ({
-            ...prev,
-            status: 'paused'
-        }));
+        setSessionState(prev => {
+            if (prev.status !== 'active') return prev;
+            
+            const now = Date.now();
+            console.log("⏸️ Pausing session at:", now);
+            
+            return {
+                ...prev,
+                status: 'paused',
+                pausedAt: now
+            };
+        });
     };
 
     const resumeSession = () => {
-        setSessionState(prev => ({
-            ...prev,
-            status: 'active'
-        }));
+        setSessionState(prev => {
+            if (prev.status !== 'paused' || !prev.pausedAt) return prev;
+            
+            const now = Date.now();
+            const pauseDuration = now - prev.pausedAt;
+            const newTotalPausedTime = prev.totalPausedTime + pauseDuration;
+            
+            console.log("▶️ Resuming session. Pause duration:", pauseDuration, "ms");
+            
+            return {
+                ...prev,
+                status: 'active',
+                pausedAt: null,
+                totalPausedTime: newTotalPausedTime
+            };
+        });
     };
 
     const completeSession = () => {
-        console.log("🏁 Completing session");
+        console.log("🏁 Manually completing session");
         
         setSessionState(prev => ({
             ...prev,
             status: 'complete',
             timeRemaining: 0
         }));
-        
-        // Clear localStorage after state update
-        setTimeout(() => {
-            localStorage.removeItem("Focus.url");
-            localStorage.removeItem("Focus.time");
-            localStorage.removeItem("Focus.StartTime");
-            localStorage.removeItem("Focus.EndTime");
-            localStorage.removeItem("timeLeft");
-        }, 100);
     };
 
     const resetSession = () => {
@@ -119,15 +205,26 @@ export const FocusSessionProvider = ({ children }) => {
             duration: 0,
             timeRemaining: 0,
             startTime: null,
-            endTime: null
+            endTime: null,
+            pausedAt: null,
+            totalPausedTime: 0
         });
 
         // Clear localStorage
-        localStorage.removeItem("Focus.url");
-        localStorage.removeItem("Focus.time");
-        localStorage.removeItem("Focus.StartTime");
-        localStorage.removeItem("Focus.EndTime");
-        localStorage.removeItem("timeLeft");
+        localStorage.removeItem("Focus.sessionData");
+    };
+
+    // Get formatted time remaining
+    const getFormattedTimeRemaining = () => {
+        const seconds = sessionState.timeRemaining;
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+        
+        if (hours > 0) {
+            return `${hours}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+        }
+        return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
     };
 
     return (
@@ -139,7 +236,8 @@ export const FocusSessionProvider = ({ children }) => {
                 pauseSession,
                 resumeSession,
                 completeSession,
-                resetSession
+                resetSession,
+                getFormattedTimeRemaining
             }}
         >
             {children}
@@ -155,22 +253,27 @@ export const useFocusSession = () => {
     return context;
 };
 
-// Simplified Route Guards
+// Improved Route Guards with better loading states
 const ProtectedRoute = ({ children, allowedStatuses, fallback = "/focusMode", loadingText = "Loading..." }) => {
     const { status, isLoading } = useFocusSession();
     
     console.log(`🛡️ ProtectedRoute check:`, { status, allowedStatuses, isLoading });
     
     if (isLoading) {
-        return <div className="min-h-screen flex items-center justify-center text-white bg-[#0a0a0a]">{loadingText}</div>;
+        return (
+            <div className="min-h-screen flex items-center justify-center text-white bg-[#0a0a0a]">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mb-4 mx-auto"></div>
+                    <div>{loadingText}</div>
+                </div>
+            </div>
+        );
     }
     
-    // Special case: if session is complete, redirect to success
-    console.log(allowedStatuses);
-    
-    if (status === 'complete' && allowedStatuses.includes('complete') && location.pathname !== "/success") {
+    // Handle completion redirect
+    if (status === 'complete' && allowedStatuses.includes('complete') && window.location.pathname !== "/success") {
         console.log("🏁 Redirecting to success page");
-        return <Navigate to="/success"/>;
+        return <Navigate to="/success" replace />;
     }
     
     if (!allowedStatuses.includes(status)) {
