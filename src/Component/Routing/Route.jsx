@@ -1,4 +1,8 @@
-import {  RequiredActiveSession, RequiredCompleteSession, RequiredConfigureSession } from "@/Context/FocusSessionProvider";
+import { 
+  RequireActiveSession, 
+  RequireCompleteSession, 
+  RequireConfiguredSession 
+} from "@/Context/FocusSessionProvider";
 import Focus from "../../Pages/Focus";
 import FocusSetup from "../../Pages/FocusSetup";
 import Home from "../../Pages/Home";
@@ -11,37 +15,42 @@ const AppRoute = () => {
   return (
     <div>
       <Routes>
-        <
-          Route path="/" element={<Home />} />
+        {/* Public routes */}
+        <Route path="/" element={<Home />} />
         <Route path="/focusMode" element={<FocusSetup />} />
-
-
-
-        <Route path="/success" element={
-          <RequiredCompleteSession>
-          <Success />
-          </RequiredCompleteSession>
-          } />
-
-
-        <Route path="/focus" element={
-          <RequiredConfigureSession>
-          <Focus />
-          </RequiredConfigureSession>
-          } />
-
-        <Route path="/type" element={
-          <RequiredActiveSession>
-          <TypingChallenge />
-          </RequiredActiveSession>
-          } />
-
-
         <Route path="/Statics" element={<Statics />} />
         <Route path="/settings" element={<Statics />} />
-        {/* <Route path="/a" element={<FeatureSection />} /> */}
 
-      <Route path="*" element={<Navigate to="/" replace/>}/>
+        {/* Protected routes */}
+        <Route 
+          path="/success" 
+          element={
+            <RequireCompleteSession>
+              <Success />
+            </RequireCompleteSession>
+          } 
+        />
+
+        <Route 
+          path="/focus" 
+          element={
+            <RequireConfiguredSession>
+              <Focus />
+            </RequireConfiguredSession>
+          } 
+        />
+
+        <Route 
+          path="/type" 
+          element={
+            <RequireActiveSession>
+              <TypingChallenge />
+            </RequireActiveSession>
+          } 
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertTriangle, ArrowLeft, Type, Shield, Backpack } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Type, Shield } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useFocusSession } from "@/Context/FocusSessionProvider";
 
 // A consistent, smooth transition object to be reused
 const smoothTransition = { duration: 0.35, ease: "easeInOut" };
@@ -15,6 +16,7 @@ const TypingChallenge = () => {
   const [showWarning, setShowWarning] = useState(true);
   const inputRef = useRef(null);
   const navigate = useNavigate();
+  const { resetSession, timeRemaining } = useFocusSession();
 
   const exitPhrases = [
     "By typing this, I admit that short term comfort is more important to me than long term success.",
@@ -51,10 +53,23 @@ const TypingChallenge = () => {
   }, [error]);
 
   const onSuccess = () => {
+    console.log("🚪 Exiting session early");
+    
+    // Clear all focus session data
     localStorage.removeItem("timeLeft");
+    localStorage.removeItem("Focus.url");
+    localStorage.removeItem("Focus.time");
+    localStorage.removeItem("Focus.StartTime");
+    localStorage.removeItem("Focus.EndTime");
+    
+    // Notify extension
     window.postMessage({ type: "EndFocusSession" }, "*");
-    navigate("/");
-    console.log("Session ended successfully");
+    
+    // Reset session state
+    resetSession();
+    
+    // Navigate to home
+    navigate("/", { replace: true });
   };
 
   const handleSubmit = () => {
@@ -73,6 +88,17 @@ const TypingChallenge = () => {
 
   const progress = Math.min((input.length / (requirePhrase.length || 1)) * 100, 100);
   const isComplete = input === requirePhrase || input === "Aadarsh";
+
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    
+    if (hours > 0) {
+      return `${hours}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center text-white overflow-hidden relative">
@@ -95,32 +121,40 @@ const TypingChallenge = () => {
                 <Shield className="w-7 h-7 text-red-400" strokeWidth={1.5} />
               </div>
               <h1 className="text-3xl md:text-4xl font-light text-white mb-4 tracking-tight">Focus Protection</h1>
+              
+              {/* Show remaining time */}
+              {timeRemaining > 0 && (
+                <div className="mb-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                  <p className="text-amber-400 text-sm">
+                    ⏰ Time remaining: <span className="font-mono font-bold">{formatTime(Math.floor(timeRemaining / 1000))}</span>
+                  </p>
+                </div>
+              )}
+              
               <p className="text-lg text-white/60 mb-8 max-w-md mx-auto leading-relaxed font-light">
                 To exit, you must type the phrase below exactly as shown—acknowledging the cost of giving up.
               </p>
-<div className="flex flex-col justify-center items-center">
-  <motion.button
-    onClick={() => setShowWarning(false)}
-    className="px-8 py-3 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white font-light transition-colors duration-300 backdrop-blur-sm"
-    whileHover={{ scale: 1.03 }}
-    whileTap={{ scale: 0.97 }}
-  >
-    Continue
-  </motion.button>
+              
+              <div className="flex flex-col justify-center items-center">
+                <motion.button
+                  onClick={() => setShowWarning(false)}
+                  className="px-8 py-3 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white font-light transition-colors duration-300 backdrop-blur-sm"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  Continue
+                </motion.button>
 
-  <Link
-  to="/focus"
-  >
-  <motion.button
-    whileHover={{ scale: 1.03 }}
-    whileTap={{ scale: 0.97 }}
-    className="mt-4 underline text-white/60 font-light"
-  >
-    Go back
-  </motion.button>
-  </Link>
-</div>
-
+                <Link to="/focus">
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="mt-4 underline text-white/60 font-light"
+                  >
+                    Go back
+                  </motion.button>
+                </Link>
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -138,6 +172,14 @@ const TypingChallenge = () => {
                 </div>
                 <h1 className="text-2xl md:text-3xl font-light text-white mb-2 tracking-tight">Type to Exit</h1>
                 <p className="text-white/50 font-light">Match the phrase exactly to continue</p>
+                
+                {/* Show remaining time in header */}
+                {timeRemaining > 0 && (
+                  <div className="mt-3 inline-flex items-center space-x-2 text-sm text-white/60">
+                    <span>⏰</span>
+                    <span className="font-mono">{formatTime(Math.floor(timeRemaining / 1000))} remaining</span>
+                  </div>
+                )}
               </div>
 
               {/* Required Phrase */}
@@ -232,7 +274,7 @@ const TypingChallenge = () => {
         </AnimatePresence>
       </div>
 
-      <style >{`
+      <style>{`
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
           10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }

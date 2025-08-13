@@ -3,75 +3,84 @@
   import { Pause, Play, RotateCcw, Home, Zap } from "lucide-react";
   import { motion, AnimatePresence } from "framer-motion";
 
-  const Timer = ({ initialTimer, onComplete }) => {
-    const storeTimeLeft = localStorage.getItem("timeLeft");
-    const [timeLeft, setTimeLeft] = useState(
-      storeTimeLeft && Number(storeTimeLeft) > 0 ? Number(storeTimeLeft) : initialTimer
-    );
-    const [isRunning, setIsRunning] = useState(true);
-    const [isAnimating, setIsAnimating] = useState(false);
+ 
+const Timer = ({ initialTimer, onComplete }) => {
+  const storeTimeLeft = localStorage.getItem("timeLeft");
+  const [timeLeft, setTimeLeft] = useState(
+    storeTimeLeft && Number(storeTimeLeft) > 0 ? Number(storeTimeLeft) : initialTimer
+  );
+  const [isRunning, setIsRunning] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [hasCompleted, setHasCompleted] = useState(false);
 
-    // Core functionality - enhanced and cleaned up
-    useEffect(() => {
-      const interval = setInterval(() => {
-        window.postMessage({ type: "TIME_UPDATE", timeLeft }, "*");
+  // Core functionality - enhanced and cleaned up
+  useEffect(() => {
+    const interval = setInterval(() => {
+      window.postMessage({ type: "TIME_UPDATE", timeLeft }, "*");
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timeLeft]);
+
+  useEffect(() => {
+    if (timeLeft >= 0) {
+      localStorage.setItem("timeLeft", timeLeft);
+    }
+  }, [timeLeft]);
+
+  useEffect(() => {
+    if (!storeTimeLeft || storeTimeLeft <= 0) {
+      setTimeLeft(initialTimer);
+    }
+  }, [initialTimer, storeTimeLeft]);
+
+  useEffect(() => {
+    let timer;
+    if (isRunning && timeLeft > 0) {
+      timer = setTimeout(() => {
+        setTimeLeft((prevValue) => prevValue - 1);
       }, 1000);
-      return () => clearInterval(interval);
-    }, [timeLeft]);
+    }
+    return () => clearTimeout(timer);
+  }, [isRunning, timeLeft]);
 
-    useEffect(() => {
-      if (timeLeft >= 0) {
-        localStorage.setItem("timeLeft", timeLeft);
-      }
-    }, [timeLeft]);
-
-    useEffect(() => {
-      if (!storeTimeLeft || storeTimeLeft <= 0) {
-        setTimeLeft(initialTimer);
-      }
-    }, [initialTimer, storeTimeLeft]);
-
-    useEffect(() => {
-      let timer;
-      if (isRunning && timeLeft > 0) {
-        timer = setTimeout(() => {
-          setTimeLeft((prevValue) => prevValue - 1);
-        }, 1000);
-      }
-      return () => clearTimeout(timer);
-    }, [isRunning, timeLeft]);
-
-    useEffect(() => {
-      if (timeLeft === 0) {
-        setIsRunning(false);
-        localStorage.removeItem("timeLeft");;
-        onComplete();
-        setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 3000);
-      }
-    }, [timeLeft, onComplete]);
-
-    // Enhanced utility functions
-    const formatTime = (seconds) => {
-      const hours = Math.floor(seconds / 3600);
-      const minutes = Math.floor((seconds % 3600) / 60);
-      const secs = Math.floor(seconds % 60);
+  useEffect(() => {
+    if (timeLeft === 0 && !hasCompleted) {
+      console.log("⏰ Timer reached zero, completing session");
+      setIsRunning(false);
+      setHasCompleted(true);
+      localStorage.removeItem("timeLeft");
+      setIsAnimating(true);
       
-      if (hours > 0) {
-        return `${hours}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+      // Call completion handler
+      if (onComplete) {
+        onComplete();
       }
-      return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-    };
+      
+      setTimeout(() => setIsAnimating(false), 3000);
+    }
+  }, [timeLeft, onComplete, hasCompleted]);
 
-    const progressPercentage = initialTimer > 0 ? (timeLeft / initialTimer) * 100 : 0;
-    const circumference = 2 * Math.PI * 45;
-    const strokeDashoffset = circumference - (circumference * progressPercentage) / 100;
+  // Enhanced utility functions
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    
+    if (hours > 0) {
+      return `${hours}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
 
-    const getTimeLeftText = () => {
-      if (timeLeft < 60) return `${timeLeft}s remaining`;
-      if (timeLeft < 3600) return `${Math.ceil(timeLeft / 60)}m remaining`;
-      return `${Math.floor(timeLeft / 3600)}h ${Math.floor((timeLeft % 3600) / 60)}m remaining`;
-    };
+  const progressPercentage = initialTimer > 0 ? (timeLeft / initialTimer) * 100 : 0;
+  const circumference = 2 * Math.PI * 45;
+  const strokeDashoffset = circumference - (circumference * progressPercentage) / 100;
+
+  const getTimeLeftText = () => {
+    if (timeLeft < 60) return `${timeLeft}s remaining`;
+    if (timeLeft < 3600) return `${Math.ceil(timeLeft / 60)}m remaining`;
+    return `${Math.floor(timeLeft / 3600)}h ${Math.floor((timeLeft % 3600) / 60)}m remaining`;
+  };
 
     return (
       <div className="relative w-full flex flex-col items-center justify-center text-center">

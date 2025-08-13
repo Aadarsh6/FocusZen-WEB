@@ -2,52 +2,66 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Timer from "../Component/Timer";
 import { useFocusSession } from "@/Context/FocusSessionProvider";
-// import { completeSession } from "@/Context/FocusSessionProvider";
 
 const Focus = () => {
   const navigate = useNavigate();
   const [wrongTab, setWrongTab] = useState(false);
+  const { completeSession, urls, duration, status } = useFocusSession();
 
-  const urls = JSON.parse(localStorage.getItem("Focus.url") || "[]");
-  const time = parseInt(localStorage.getItem("Focus.time") || "0");
+  console.log("🎯 Focus component loaded:", { urls, duration, status });
 
-  const { completeSession } = useFocusSession()
-
-  // 🔁 Send focus session data to extension
+  // Send focus session data to extension
   useEffect(() => {
-    window.postMessage(
-      {
+    if (urls.length > 0 && duration > 0) {
+      window.postMessage({
         type: "FocusSessionData",
         allowedSites: urls,
-        focusTime: time,
-      },
-      "*"
-    );
-    console.log("📤 Posted focus session data to extension:", urls, time);
-  }, []);
+        focusTime: duration,
+      }, "*");
+      console.log("📤 Posted focus session data to extension:", urls, duration);
+    }
+  }, [urls, duration]);
 
-  // 🚫 Check if current tab is an allowed site (for in-app focus reminder)
+  // Check if current tab is allowed (for in-app focus reminder)
   useEffect(() => {
+    if (urls.length === 0) return;
+    
     const checkTab = setInterval(() => {
       const currentTab = window.location.href;
-      const isAllowed = urls.some((e) => currentTab.includes(e));
+      const isAllowed = urls.some((url) => currentTab.includes(url));
       setWrongTab(!isAllowed);
     }, 1000);
+    
     return () => clearInterval(checkTab);
   }, [urls]);
 
-  const handleSuccess = () => {
-    window.postMessage({
-      type: "EndFocusSession"
-    }, "*");
+  // Handle session completion
+  const handleTimerComplete = () => {
+    try {
+      console.log("⏰ Timer completed");
+      
+      // Notify extension
+      window.postMessage({
+        type: "EndFocusSession"
+      }, "*");
 
-    const audio = new Audio("/sound.wav");
-    audio.play().catch(err => console.log("🔇 Audio play error:", err));
-    completeSession()
-    navigate("/success");
+      // Play completion sound
+      const audio = new Audio("/sound.wav");
+      audio.play().catch(err => console.log("🔇 Audio play error:", err));
+      
+      // Update session state to complete - this will trigger route guard
+      completeSession();
+      
+      console.log("✅ Session completed, route guard should handle redirect");
+      
+    } catch (error) {
+      console.error("❌ Error completing session:", error);
+      // Fallback navigation
+      navigate("/success", { replace: true });
+    }
   };
 
-  const handleReset = () => {
+  const handleTimerReset = () => {
     window.postMessage({
       type: "EndFocusSession"
     }, "*");
@@ -61,9 +75,13 @@ const Focus = () => {
       {/* Dotted Background */}
       <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] opacity-20 z-0" />
 
-      {/* Timer Component - Now properly centered */}
+      {/* Timer Component */}
       <div className="w-full z-10">
-        <Timer initialTimer={time * 60} onComplete={handleSuccess} onReset={handleReset} />
+        <Timer 
+          initialTimer={duration * 60} 
+          onComplete={handleTimerComplete} 
+          onReset={handleTimerReset} 
+        />
       </div>
 
       {/* Wrong Tab Overlay */}

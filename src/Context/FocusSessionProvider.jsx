@@ -5,56 +5,69 @@ const FocusSessionContext = createContext()
 
 export const FocusSessionProvider = ({ children }) => {
     const [sessionState, setSessionState] = useState({
-        isConfigured: false,
-        isActive: false,
-        isComplete: false,
-        urls:[],
+        status: 'idle', // 'idle' | 'active' | 'paused' | 'complete'
+        urls: [],
         duration: 0,
+        timeRemaining: 0,
         startTime: null,
         endTime: null
     });
 
-    useEffect(()=>{
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Initialize session state from localStorage
+    useEffect(() => {
         const savedUrl = localStorage.getItem("Focus.url");
         const savedTime = localStorage.getItem("Focus.time");
         const savedStartTime = localStorage.getItem("Focus.StartTime");
         const savedEndTime = localStorage.getItem("Focus.EndTime");
 
-        console.log("🔍 Checking localStorage:", { savedUrl, savedTime, savedStartTime, savedEndTime });
+        console.log("🔍 Initializing from localStorage:", { savedUrl, savedTime, savedStartTime, savedEndTime });
 
-        if(savedUrl && savedTime && savedStartTime && savedEndTime){
+        if (savedUrl && savedTime && savedStartTime && savedEndTime) {
+            const now = Date.now();
+            const endTime = parseInt(savedEndTime);
+            const startTime = parseInt(savedStartTime);
+            
+            let status = 'idle';
+            if (now < endTime) {
+                status = 'active';
+            } else {
+                status = 'complete';
+            }
+
             const newState = {
-                isConfigured: true,
-                isActive: Date.now() < parseInt(savedEndTime),
-                isComplete: Date.now() >= parseInt(savedEndTime),
+                status,
                 urls: JSON.parse(savedUrl),
                 duration: parseInt(savedTime),
-                startTime: parseInt(savedStartTime),
-                endTime: parseInt(savedEndTime)
+                timeRemaining: Math.max(0, endTime - now),
+                startTime,
+                endTime
             };
             
-            console.log("✅ Setting session state:", newState);
+            console.log("✅ Session state initialized:", newState);
             setSessionState(newState);
         }
-    },[])
+        
+        setIsLoading(false);
+    }, []);
 
-    const startSession = (urls, duration, callback) => {
+    const startSession = (urls, duration) => {
         const startTime = Date.now();
         const endTime = Date.now() + duration * 60 * 1000;
 
         const newState = {
-            isConfigured: true,
-            isActive: true, 
-            isComplete: false,
+            status: 'active',
             urls,
             duration,
+            timeRemaining: duration * 60,
             startTime,
             endTime
         };
         
         console.log("🚀 Starting session:", newState);
         
-        // Save to localStorage first
+        // Save to localStorage
         localStorage.setItem("Focus.url", JSON.stringify(urls));
         localStorage.setItem("Focus.time", duration.toString());
         localStorage.setItem("Focus.StartTime", startTime.toString());
@@ -62,33 +75,49 @@ export const FocusSessionProvider = ({ children }) => {
         
         // Update state
         setSessionState(newState);
-        
-        // Call callback if provided (for navigation)
-        if (callback) {
-            setTimeout(() => callback(), 50);
-        }
-    }
+    };
 
-    const completeSession = () => {
+    const pauseSession = () => {
         setSessionState(prev => ({
             ...prev,
-            isActive: false,
-            isComplete: true
+            status: 'paused'
         }));
-         // Clear localStorage to prevent issues
-    localStorage.removeItem("Focus.url");
-    localStorage.removeItem("Focus.time");
-    localStorage.removeItem("Focus.StartTime");
-    localStorage.removeItem("Focus.EndTime");
+    };
+
+    const resumeSession = () => {
+        setSessionState(prev => ({
+            ...prev,
+            status: 'active'
+        }));
+    };
+
+    const completeSession = () => {
+        console.log("🏁 Completing session");
+        
+        setSessionState(prev => ({
+            ...prev,
+            status: 'complete',
+            timeRemaining: 0
+        }));
+        
+        // Clear localStorage after state update
+        setTimeout(() => {
+            localStorage.removeItem("Focus.url");
+            localStorage.removeItem("Focus.time");
+            localStorage.removeItem("Focus.StartTime");
+            localStorage.removeItem("Focus.EndTime");
+            localStorage.removeItem("timeLeft");
+        }, 100);
     };
 
     const resetSession = () => {
+        console.log("🔄 Resetting session");
+        
         setSessionState({
-            isConfigured: false,
-            isActive: false,
-            isComplete: false, // Fixed: was "isCompleted"
+            status: 'idle',
             urls: [],
             duration: 0,
+            timeRemaining: 0,
             startTime: null,
             endTime: null
         });
@@ -98,105 +127,87 @@ export const FocusSessionProvider = ({ children }) => {
         localStorage.removeItem("Focus.time");
         localStorage.removeItem("Focus.StartTime");
         localStorage.removeItem("Focus.EndTime");
-    }
+        localStorage.removeItem("timeLeft");
+    };
 
-    return(
+    return (
         <FocusSessionContext.Provider
             value={{
                 ...sessionState,
+                isLoading,
                 startSession,
+                pauseSession,
+                resumeSession,
                 completeSession,
                 resetSession
             }}
         >
             {children}
         </FocusSessionContext.Provider>
-    )
+    );
 };
 
 export const useFocusSession = () => {
-    const context = useContext(FocusSessionContext)
-    if(!context){
-        throw new Error('useFocusSession must be used within a FocusSessionProvider')
+    const context = useContext(FocusSessionContext);
+    if (!context) {
+        throw new Error('useFocusSession must be used within a FocusSessionProvider');
     }
     return context;
-}
+};
 
-const RouteGuard = ({
-    children,
-    condition,
-    fallback = "/",
-    loading = null
-}) => {
-    const [isChecking, setIsChecking] = useState(true)
-    const [hasAccess, setHasAccess] = useState(false)
-
-    useEffect(()=>{
-        const checkAccess = async()=>{
-            try {
-                const result = typeof condition === 'function' ? await condition() : condition;
-                console.log("🛡️ Route guard check:", { condition, result, hasAccess });
-                setHasAccess(result)
-            } catch (error) {
-                console.log("❌ Route guard failed", error)
-                setHasAccess(false)
-            }finally{
-                setIsChecking(false)
-            }
-        }
-        checkAccess()
-    }, [condition]) // This will re-run when condition changes
-
-    console.log("🔍 RouteGuard render:", { isChecking, hasAccess, condition });
-
-    if(isChecking && loading) return loading;
+// Simplified Route Guards
+const ProtectedRoute = ({ children, allowedStatuses, fallback = "/focusMode", loadingText = "Loading..." }) => {
+    const { status, isLoading } = useFocusSession();
     
-    if(!hasAccess){
-        console.log("🚫 Route guard blocking access, redirecting to:", fallback);
-        return <Navigate to={fallback} replace/>
+    console.log(`🛡️ ProtectedRoute check:`, { status, allowedStatuses, isLoading });
+    
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center text-white bg-[#0a0a0a]">{loadingText}</div>;
     }
+    
+    // Special case: if session is complete, redirect to success
+    console.log(allowedStatuses);
+    
+    if (status === 'complete' && allowedStatuses.includes('complete') && location.pathname !== "/success") {
+        console.log("🏁 Redirecting to success page");
+        return <Navigate to="/success"/>;
+    }
+    
+    if (!allowedStatuses.includes(status)) {
+        console.log(`🚫 Access denied. Status: ${status}, Allowed: ${allowedStatuses}`);
+        return <Navigate to={fallback} replace />;
+    }
+    
     return children;
 };
 
-export const RequiredActiveSession = ({children, fallback="/focusMode"}) => {
-    const { isActive } = useFocusSession()
-    console.log("🔒 RequiredActiveSession check:", { isActive });
-    
-    return(
-        <RouteGuard
-            condition={isActive}
-            fallback={fallback}
-            loading={<div>Checking session...</div>}
-        >
-            {children}
-        </RouteGuard>
-    )
-}
+// Specific route guards
+export const RequireActiveSession = ({ children, fallback = "/focusMode" }) => (
+    <ProtectedRoute 
+        allowedStatuses={['active', 'paused']} 
+        fallback={fallback}
+        loadingText="Checking session..."
+    >
+        {children}
+    </ProtectedRoute>
+);
 
-export const RequiredCompleteSession = ({children, fallback="/focusMode"}) => {
-    const { isComplete } = useFocusSession()
-    console.log("🏁 RequiredCompleteSession check:", { isComplete });
+export const RequireCompleteSession = ({ children, fallback = "/focusMode" }) => (
+    <ProtectedRoute 
+        allowedStatuses={['complete']} 
+        fallback={fallback}
+        loadingText="Verifying completion..."
+    >
+        {children}
+    </ProtectedRoute>
+);
 
-    return (
-        <RouteGuard
-            condition={isComplete}
-            fallback={fallback}
-        >
-            {children}
-        </RouteGuard>
-    )
-}
-
-export const RequiredConfigureSession = ({children, fallback = "/focusMode"}) => {
-    const { isConfigured } = useFocusSession() // Fixed: was missing destructuring
-    console.log("⚙️ RequiredConfigureSession check:", { isConfigured });
-    
-    return(
-        <RouteGuard
-            condition={isConfigured}
-            fallback={fallback}
-        >
-            {children}
-        </RouteGuard>
-    )
-}
+export const RequireConfiguredSession = ({ children, fallback = "/focusMode" }) => (
+    <ProtectedRoute 
+        allowedStatuses={['active', 'paused', 'complete']} 
+        fallback={fallback}
+        loadingText="Loading focus session..."
+    >
+        {children}
+    </ProtectedRoute>
+);

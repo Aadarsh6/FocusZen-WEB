@@ -1,23 +1,14 @@
 import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Trophy, Sparkles, Home, RotateCcw, CheckCircle, Star } from "lucide-react";
 import ShootConfetti from "@/Component/UI/ShootConfettie";
-
-
+import { useFocusSession } from "@/Context/FocusSessionProvider";
 
 const Success = () => {
   const confettiRef = useRef(null);
+  const { resetSession } = useFocusSession();
 
-  // All original functionality is preserved
-  useEffect(() => {
-    console.log("Clearing localStorage...");
-    localStorage.removeItem("Focus.url");
-    localStorage.removeItem("Focus.time");
-    localStorage.removeItem("Focus.EndTime");
-    localStorage.removeItem("Focus.StartTime");
-    localStorage.removeItem("timeLeft");
-  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -39,19 +30,12 @@ const Success = () => {
   return (
     <div className="min-h-screen text-white font-light flex flex-col items-center justify-center overflow-hidden relative p-4">
       
-         <div
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/bg2.png')" }}
         aria-hidden="true"
       />
-       <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
-
-      {/* Background from the original version is kept */}
-      {/* <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:40px_40px] opacity-[0.03]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.05)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08)_0%,transparent_50%)]" />
-      </div> */}
+      <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
 
       {/* Main Content with faster animations */}
       <motion.div
@@ -156,6 +140,7 @@ const Success = () => {
           <Link
             to="/focusMode"
             className="flex-1 group inline-flex items-center justify-center px-6 py-3.5 text-base font-medium rounded-xl transition-all duration-300 focus:outline-none bg-white text-black hover:bg-gray-200"
+            onClick={() => resetSession()}
           >
             <RotateCcw size={18} className="mr-2.5 transition-transform group-hover:-rotate-45" />
             Start New Session

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { X, Plus, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,14 +7,26 @@ import { useFocusSession } from "@/Context/FocusSessionProvider";
 
 const FocusSetup = () => {
   const navigate = useNavigate();
-  const { startSession } = useFocusSession(); // Use the context
+  const { startSession, status } = useFocusSession();
+  
   const [urls, setUrls] = useState([""]);
   const [time, setTime] = useState("");
   const [error, setError] = useState("");
   const [customTimeActive, setCustomTimeActive] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
   const [showSuggestion, setShowSuggestion] = useState(false);
-  const errorRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Handle existing sessions
+  useEffect(() => {
+    if (status === 'active' || status === 'paused') {
+      console.log("🔄 Active session found, redirecting to focus");
+      navigate("/focus", { replace: true });
+    } else if (status === 'complete') {
+      console.log("🏁 Complete session found, redirecting to success");
+      navigate("/success", { replace: true });
+    }
+  }, [status, navigate]);
 
   const handleUrl = (index, value) => {
     const newUrls = [...urls];
@@ -26,7 +38,7 @@ const FocusSetup = () => {
       setShowSuggestion(true);
     } else {
       setShowSuggestion(false);
-      setError("")
+      setError("");
     }
   };
 
@@ -51,11 +63,12 @@ const FocusSetup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     setError("");
-    console.log("🚀 Form submitted");
     
     try {
-      const hiddenUrl = ["https://focuszen.vercel.app/", "http://localhost:"];
+      const hiddenUrls = ["https://focuszen.vercel.app/", "http://localhost:"];
       const validUserUrls = urls.filter(url => url.trim() !== "");
       
       // Validation
@@ -76,39 +89,43 @@ const FocusSetup = () => {
         return;
       }
 
-      const allValidUrls = [...validUserUrls, ...hiddenUrl];
+      const allValidUrls = [...validUserUrls, ...hiddenUrls];
       const focusTime = parseInt(time);
 
       console.log("💾 Starting session with:", { allValidUrls, focusTime });
 
-      // Use the context method to start session
-      startSession(allValidUrls, focusTime, ()=>{
-        console.log(' Session started, now navigating to /focus');
-        navigate("/focus", {replace:true})
-        
-      });
+      // Send message to extension
+      window.postMessage({
+        type: "FocusSessionData",
+        allowedSites: allValidUrls,
+        focusTime: focusTime
+      }, "*");
 
-      // Send message to extension (if needed)
-      if (window.postMessage) {
-        window.postMessage({
-          type: "FocusSessionData",
-          allowedSites: allValidUrls,
-          focusTime: focusTime
-        }, "*");
-      }
-
-      console.log("🧭 Navigating to /focus");
-
-      // Navigate to focus page
-      navigate("/focus", { replace: true });
+      // Start session and navigate
+      startSession(allValidUrls, focusTime);
+      
+      // Navigate after a short delay to ensure state is updated
+      setTimeout(() => {
+        navigate("/focus", { replace: true });
+      }, 100);
 
     } catch (error) {
       console.error("❌ Error during form submission:", error);
       setError("An error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const timeOptions = [30, 45, 60, 90, 120];
+
+  if (isSubmitting) {
+    return (
+      <div className="min-h-screen w-full bg-[#0a0a0a] flex items-center justify-center">
+        <div className="text-white text-xl">Starting your focus session...</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -118,10 +135,7 @@ const FocusSetup = () => {
         <div className="absolute inset-0 bg-[#0d0d0d] z-0" />
         <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] opacity-20 z-0" />
         <div className="absolute inset-0 bg-black/30" aria-hidden="true" />
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(0,0,0,0.65))]"
-          aria-hidden="true"
-        />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(0,0,0,0.65))]" aria-hidden="true" />
 
         <motion.div 
           className="relative z-10 w-[80%] max-w-5xl mx-auto px-4 md:px-8 text-white"
@@ -266,8 +280,6 @@ const FocusSetup = () => {
               {error && (
                 <motion.div
                   className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-2.5 rounded-lg flex items-center text-sm mx-auto"
-                  ref={errorRef}
-                  tabIndex={-1}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
@@ -289,9 +301,10 @@ const FocusSetup = () => {
             >
               <button
                 type="submit"
-                className="w-full px-8 py-3 rounded-full bg-white text-black font-semibold hover:bg-white/90 transition-all duration-300 text-base shadow-lg shadow-white/10 hover:scale-105"
+                disabled={isSubmitting}
+                className="w-full px-8 py-3 rounded-full bg-white text-black font-semibold hover:bg-white/90 disabled:bg-white/50 transition-all duration-300 text-base shadow-lg shadow-white/10 hover:scale-105 disabled:scale-100"
               >
-                Start Focus Session
+                {isSubmitting ? "Starting..." : "Start Focus Session"}
               </button>
             </motion.div>
           </motion.form>
