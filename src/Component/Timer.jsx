@@ -202,9 +202,9 @@ const Timer = ({ onComplete }) => {
         >
           <Link
             to="/type"
-            className="inline-flex items-center justify-center px-10 py-4 text-lg font-semibold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-white/10"
+            className="inline-flex items-center justify-center bg-transparent px-5 py-4 text-sm hover:underline  font-semibold rounded-full text-white/60 hover:text-white/90 transition-all duration-300 "
           >
-            <Home size={20} className="mr-3" />
+            <Home size={15} className="mr-3" />
             Exit Focus Mode
           </Link>
         </motion.div>

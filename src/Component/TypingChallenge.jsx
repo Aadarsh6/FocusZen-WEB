@@ -118,7 +118,7 @@ const TypingChallenge = () => {
               transition={smoothTransition}
             >
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/5 backdrop-blur-sm mb-6 border border-white/10">
-                <Shield className="w-7 h-7 text-red-400" strokeWidth={1.5} />
+                <Shield className="w-7 h-7 text-red-500" strokeWidth={1.5} />
               </div>
               <h1 className="text-3xl md:text-4xl font-light text-white mb-4 tracking-tight">Focus Protection</h1>
               
