@@ -193,52 +193,6 @@ const Timer = ({ onComplete }) => {
           </div>
         </motion.div>
 
-        {/* Control Buttons */}
-        <motion.div 
-          className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto mb-8"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-        >
-          
-          {/* Play/Pause Button - Only show if session is active or paused */}
-          <AnimatePresence>
-            {(status === 'active' || status === 'paused') && (
-              <motion.button
-                onClick={handlePauseResume}
-                className="flex-1 relative group inline-flex items-center justify-center px-8 py-4 text-white font-jost font-medium rounded-2xl transition-all duration-300 transform hover:scale-105 bg-white/10 border border-white/20 hover:bg-white/20 hover:border-white/30"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-              >
-                {isRunning ? (
-                  <Pause className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200" />
-                ) : (
-                  <Play className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200" />
-                )}
-                {isRunning ? "Pause Session" : "Resume Session"}
-              </motion.button>
-            )}
-          </AnimatePresence>
-
-          {/* Reset Button - Only show if session is not complete */}
-          <AnimatePresence>
-            {status !== 'complete' && (
-              <motion.button
-                onClick={handleReset}
-                className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-jost font-medium rounded-2xl transition-all duration-300 flex items-center justify-center transform hover:scale-105 group border border-white/10 hover:border-white/20"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-              >
-                <RotateCcw className="w-5 h-5 mr-3 group-hover:rotate-180 transition-transform duration-300" />
-                End Session
-              </motion.button>
-            )}
-          </AnimatePresence>
-        </motion.div>
 
         {/* Exit Button */}
         <motion.div
