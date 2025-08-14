@@ -20,7 +20,7 @@ const FocusSetup = () => {
   // Handle existing sessions
   useEffect(() => {
     if (status === 'active' || status === 'paused') {
-      console.log("🔄 Active session found, redirecting to focus");
+      // console.log("Active session found, redirecting to focus");
       navigate("/focus", { replace: true });
     } else if (status === 'complete') {
       console.log("🏁 Complete session found, redirecting to success");
@@ -92,7 +92,7 @@ const FocusSetup = () => {
       const allValidUrls = [...validUserUrls, ...hiddenUrls];
       const focusTime = parseInt(time);
 
-      console.log("💾 Starting session with:", { allValidUrls, focusTime });
+      // console.log(" Starting session with:", { allValidUrls, focusTime });
 
       // Send message to extension
       window.postMessage({

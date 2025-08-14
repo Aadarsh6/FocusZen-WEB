@@ -47,7 +47,7 @@ export const FocusSessionProvider = ({ children }) => {
                     
                     // Auto-complete if time is up
                     if (newTimeRemaining === 0 && prevState.status === 'active') {
-                        console.log("⏰ Timer reached zero, auto-completing session");
+                        // console.log("Timer reached zero, auto-completing session");
                         // Don't call completeSession here to avoid recursion
                         // Just update the status, the useEffect below will handle completion
                         return {
@@ -73,7 +73,7 @@ export const FocusSessionProvider = ({ children }) => {
     // Handle completion cleanup
     useEffect(() => {
         if (sessionState.status === 'complete') {
-            console.log("🏁 Session completed, cleaning up localStorage");
+            // console.log(" Session completed, cleaning up localStorage");
             setTimeout(() => {
                 localStorage.removeItem("Focus.sessionData");
             }, 100);
@@ -87,7 +87,7 @@ export const FocusSessionProvider = ({ children }) => {
             
             if (savedSessionData) {
                 const parsedData = JSON.parse(savedSessionData);
-                console.log("🔍 Initializing from localStorage:", parsedData);
+                // console.log("Initializing from localStorage:", parsedData);
                 
                 const now = Date.now();
                 const timeRemaining = calculateTimeRemaining(parsedData);
@@ -110,11 +110,11 @@ export const FocusSessionProvider = ({ children }) => {
                     timeRemaining
                 };
                 
-                console.log("✅ Session state initialized:", newState);
+                // console.log("Session state initialized:", newState);
                 setSessionState(newState);
             }
         } catch (error) {
-            console.error("❌ Error loading session data:", error);
+            console.error("Error loading session data:", error);
             localStorage.removeItem("Focus.sessionData");
         }
         
@@ -126,9 +126,9 @@ export const FocusSessionProvider = ({ children }) => {
         if (!isLoading && sessionState.status !== 'idle') {
             try {
                 localStorage.setItem("Focus.sessionData", JSON.stringify(sessionState));
-                console.log("💾 Session state saved:", sessionState);
+                // console.log("Session state saved:", sessionState);
             } catch (error) {
-                console.error("❌ Error saving session data:", error);
+                console.error("Error saving session data:", error);
             }
         }
     }, [sessionState, isLoading]);
@@ -148,46 +148,46 @@ export const FocusSessionProvider = ({ children }) => {
             totalPausedTime: 0
         };
         
-        console.log("🚀 Starting session:", newState);
+        // console.log(" Starting session:", newState);
         setSessionState(newState);
     };
 
-    const pauseSession = () => {
-        setSessionState(prev => {
-            if (prev.status !== 'active') return prev;
+    // const pauseSession = () => {
+    //     setSessionState(prev => {
+    //         if (prev.status !== 'active') return prev;
             
-            const now = Date.now();
-            console.log("⏸️ Pausing session at:", now);
+    //         const now = Date.now();
+    //         console.log("⏸️ Pausing session at:", now);
             
-            return {
-                ...prev,
-                status: 'paused',
-                pausedAt: now
-            };
-        });
-    };
+    //         return {
+    //             ...prev,
+    //             status: 'paused',
+    //             pausedAt: now
+    //         };
+    //     });
+    // };
 
-    const resumeSession = () => {
-        setSessionState(prev => {
-            if (prev.status !== 'paused' || !prev.pausedAt) return prev;
+    // const resumeSession = () => {
+    //     setSessionState(prev => {
+    //         if (prev.status !== 'paused' || !prev.pausedAt) return prev;
             
-            const now = Date.now();
-            const pauseDuration = now - prev.pausedAt;
-            const newTotalPausedTime = prev.totalPausedTime + pauseDuration;
+    //         const now = Date.now();
+    //         const pauseDuration = now - prev.pausedAt;
+    //         const newTotalPausedTime = prev.totalPausedTime + pauseDuration;
             
-            console.log("▶️ Resuming session. Pause duration:", pauseDuration, "ms");
+    //         console.log("▶️ Resuming session. Pause duration:", pauseDuration, "ms");
             
-            return {
-                ...prev,
-                status: 'active',
-                pausedAt: null,
-                totalPausedTime: newTotalPausedTime
-            };
-        });
-    };
+    //         return {
+    //             ...prev,
+    //             status: 'active',
+    //             pausedAt: null,
+    //             totalPausedTime: newTotalPausedTime
+    //         };
+    //     });
+    // };
 
     const completeSession = () => {
-        console.log("🏁 Manually completing session");
+        // console.log("Manually completing session");
         
         setSessionState(prev => ({
             ...prev,
@@ -233,8 +233,8 @@ export const FocusSessionProvider = ({ children }) => {
                 ...sessionState,
                 isLoading,
                 startSession,
-                pauseSession,
-                resumeSession,
+                // pauseSession,
+                // resumeSession,
                 completeSession,
                 resetSession,
                 getFormattedTimeRemaining
@@ -257,7 +257,7 @@ export const useFocusSession = () => {
 const ProtectedRoute = ({ children, allowedStatuses, fallback = "/focusMode", loadingText = "Loading..." }) => {
     const { status, isLoading } = useFocusSession();
     
-    console.log(`🛡️ ProtectedRoute check:`, { status, allowedStatuses, isLoading });
+    // console.log(`ProtectedRoute check:`, { status, allowedStatuses, isLoading });
     
     if (isLoading) {
         return (
@@ -272,12 +272,12 @@ const ProtectedRoute = ({ children, allowedStatuses, fallback = "/focusMode", lo
     
     // Handle completion redirect
     if (status === 'complete' && allowedStatuses.includes('complete') && window.location.pathname !== "/success") {
-        console.log("🏁 Redirecting to success page");
+        // console.log(" Redirecting to success page");
         return <Navigate to="/success" replace />;
     }
     
     if (!allowedStatuses.includes(status)) {
-        console.log(`🚫 Access denied. Status: ${status}, Allowed: ${allowedStatuses}`);
+        // console.log(` Access denied. Status: ${status}, Allowed: ${allowedStatuses}`);
         return <Navigate to={fallback} replace />;
     }
     

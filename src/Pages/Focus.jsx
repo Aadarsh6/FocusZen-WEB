@@ -8,7 +8,7 @@ const Focus = () => {
   const [wrongTab, setWrongTab] = useState(false);
   const { completeSession, urls, duration, status } = useFocusSession();
 
-  console.log(" Focus component loaded:", { urls, duration, status });
+  // console.log(" Focus component loaded:", { urls, duration, status });
 
   // Send focus session data to extension when component mounts or session changes
   useEffect(() => {
@@ -21,7 +21,7 @@ const Focus = () => {
       };
       
       window.postMessage(sessionData, "*");
-      console.log(" Posted focus session data to extension:", sessionData);
+      // console.log(" Posted focus session data to extension:", sessionData);
     }
   }, [urls, duration, status]);
 
@@ -29,7 +29,7 @@ const Focus = () => {
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.data.type === "FOCUS_SESSION_VIOLATED") {
-        console.log("🚫 Focus session violation detected");
+        // console.log("Focus session violation detected");
         setWrongTab(true);
         setTimeout(() => setWrongTab(false), 3000); // Auto-hide after 3 seconds
       } else if (event.data.type === "FOCUS_SESSION_COMPLIANT") {
@@ -51,7 +51,7 @@ const Focus = () => {
       
       // Only set wrongTab if we're not on an allowed page and not already showing the warning
       if (!isAllowed && !wrongTab) {
-        console.log(" Current page not in allowed list:", currentUrl);
+        console.log("Current page not in allowed list:", currentUrl);
         // Don't automatically show wrong tab for the focus page itself
         // Let the extension handle this logic
       }
@@ -75,18 +75,11 @@ const Focus = () => {
         reason: "completed"
       }, "*");
 
-      // Play completion sound (with error handling)
-      try {
-        const audio = new Audio("/sound.wav");
-        audio.play().catch(err => console.log("🔇 Audio play failed:", err.message));
-      } catch (audioError) {
-        console.log("Audio initialization failed:", audioError.message);
-      }
       
       // this will trigger the route guard to redirect
       completeSession();
       
-      console.log("✅ Session completion handled, route guard will redirect");
+      // console.log("Session completion handled, route guard will redirect");
       
     } catch (error) {
       console.error(" Error handling timer completion:", error);
