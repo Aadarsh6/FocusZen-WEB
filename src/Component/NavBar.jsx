@@ -41,24 +41,24 @@ const NavBar = () => {
     <>
       <nav
         className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex justify-between items-center 
-                   h-20 w-[90%] md:w-[80%] px-6 md:px-12
+                   h-20 w-[90%] sm:w-[85%] lg:w-[80%] px-6 sm:px-8 lg:px-12
                    bg-black/20 backdrop-blur-xl 
                    shadow-lg border border-white/10 rounded-2xl"
       >
         {/* Logo */}
         <Link to="/" className="flex items-center group">
           <div className="flex items-end">
-            <span className="text-2xl md:text-3xl font-semibold font-jost text-white/90 group-hover:text-white transition-colors duration-300">
+            <span className="text-2xl sm:text-3xl font-semibold font-jost text-white/90 group-hover:text-white transition-colors duration-300">
               Focus
             </span>
-            <span className="text-2xl md:text-3xl font-semibold font-jost text-white/60 group-hover:text-white/80 transition-colors duration-300">
+            <span className="text-2xl sm:text-3xl font-semibold font-jost text-white/60 group-hover:text-white/80 transition-colors duration-300">
               Zen
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden xl:flex items-center space-x-8">
           {navigationLinks.map((item) => (
             <NavLink
               key={item.name}
@@ -79,7 +79,7 @@ const NavBar = () => {
         </div>
 
         {/* Desktop CTA Buttons */}
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden xl:flex items-center space-x-4">
           <button className="px-5 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white/90 font-medium hover:bg-white/20 transition-all duration-300">
             Sign In
           </button>
@@ -92,7 +92,7 @@ const NavBar = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-white/80 hover:text-white transition-colors duration-300 z-50"
+          className="xl:hidden text-white/80 hover:text-white transition-colors duration-300 z-50"
           onClick={toggleMenu}
           aria-label="Toggle menu"
         >
@@ -108,7 +108,7 @@ const NavBar = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="md:hidden fixed top-0 left-0 w-full h-full bg-black/50 backdrop-blur-lg z-40 pt-28 p-8"
+            className="xl:hidden fixed top-0 left-0 w-full h-full bg-black/50 backdrop-blur-lg z-40 pt-28 p-8"
           >
             <div className="flex flex-col items-center justify-center h-full space-y-8">
               {navigationLinks.map((item) => (

@@ -10,6 +10,7 @@ import Statics from "../../Pages/Statics";
 import Success from "../../Pages/Success";
 import TypingChallenge from "../TypingChallenge";
 import { Navigate, Route, Routes } from "react-router-dom";
+import PrivacyPolicy from "@/Pages/Privacy";
 
 const AppRoute = () => {
   return (
@@ -21,6 +22,7 @@ const AppRoute = () => {
         <Route path="/Statics" element={<Statics />} />
         <Route path="/settings" element={<Statics />} />
 
+        <Route path="/privacy" element={<PrivacyPolicy />} />
         {/* Protected routes */}
         <Route 
           path="/success" 
