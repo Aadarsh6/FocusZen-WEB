@@ -152,40 +152,6 @@ export const FocusSessionProvider = ({ children }) => {
         setSessionState(newState);
     };
 
-    // const pauseSession = () => {
-    //     setSessionState(prev => {
-    //         if (prev.status !== 'active') return prev;
-            
-    //         const now = Date.now();
-    //         console.log("⏸️ Pausing session at:", now);
-            
-    //         return {
-    //             ...prev,
-    //             status: 'paused',
-    //             pausedAt: now
-    //         };
-    //     });
-    // };
-
-    // const resumeSession = () => {
-    //     setSessionState(prev => {
-    //         if (prev.status !== 'paused' || !prev.pausedAt) return prev;
-            
-    //         const now = Date.now();
-    //         const pauseDuration = now - prev.pausedAt;
-    //         const newTotalPausedTime = prev.totalPausedTime + pauseDuration;
-            
-    //         console.log("▶️ Resuming session. Pause duration:", pauseDuration, "ms");
-            
-    //         return {
-    //             ...prev,
-    //             status: 'active',
-    //             pausedAt: null,
-    //             totalPausedTime: newTotalPausedTime
-    //         };
-    //     });
-    // };
-
     const completeSession = () => {
         // console.log("Manually completing session");
         
