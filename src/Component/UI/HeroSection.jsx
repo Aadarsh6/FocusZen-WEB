@@ -63,8 +63,9 @@ const HeroSection = () => {
           </Link>
           
           <a 
-            href="#" // Replace with your actual download link
+            href="https://chromewebstore.google.com/detail/fibgkmoceeeifneehpcideakhcgllcbj?utm_source=item-share-cb" 
             className="group inline-flex items-center text-sm text-gray-400 hover:text-white transition-colors duration-300"
+            target="_blank"
           >
             <Download size={14} className="mr-2 opacity-70 transition-opacity group-hover:opacity-100" />
             Download Extension
