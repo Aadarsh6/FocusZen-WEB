@@ -14,7 +14,6 @@ const Footer = () => {
   const socialLinks = [
     { icon: Twitter, href: "https://x.com/adarshx_23", label: "Twitter" },
     { icon: Github, href: "https://github.com/Aadarsh6", label: "GitHub" },
-    { icon: Instagram, href: "#", label: "Instagram" },
     { icon: Mail, href: "mailto:aadarshakmishra16@gmail.com", label: "Email" }
   ];
 
@@ -32,8 +31,8 @@ const Footer = () => {
 
   const supportLinks = [
     { name: "Help Center", href: "#help" },
-    { name: "Privacy Policy", href: "#privacy" },
-    { name: "Terms of Service", href: "#terms" }
+    { name: "Privacy Policy", href: "https://focuszen.vercel.app/privacy" },
+    { name: "Terms of Service", href: "https://focuszen.vercel.app/privacy" }
   ];
 
   
