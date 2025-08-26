@@ -12,8 +12,8 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   const socialLinks = [
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Github, href: "#", label: "GitHub" },
+    { icon: Twitter, href: "https://x.com/adarshx_23", label: "Twitter" },
+    { icon: Github, href: "https://github.com/Aadarsh6", label: "GitHub" },
     { icon: Instagram, href: "#", label: "Instagram" },
     { icon: Mail, href: "mailto:aadarshakmishra16@gmail.com", label: "Email" }
   ];
