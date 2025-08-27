@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import NavBar from "@/Component/NavBar";
 import { Link } from "react-router-dom";
-import { Download } from "lucide-react"; // Added an icon for visual enhancement
-
+import { Download } from "lucide-react"; 
 const HeroSection = () => {
   return (
     <section
@@ -12,7 +11,6 @@ const HeroSection = () => {
     >
       <NavBar />
 
-      {/* Background elements remain unchanged */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-90"
         style={{ backgroundImage: "url('/bg2.png')" }}
@@ -24,7 +22,6 @@ const HeroSection = () => {
         aria-hidden="true"
       />
 
-      {/* Content with faster, snappier animations */}
       <motion.div
         className="relative z-10 max-w-2xl px-4 text-white" // Increased max-w slightly for better balance
         initial={{ opacity: 0, y: 20 }}
@@ -49,7 +46,6 @@ const HeroSection = () => {
           Silence the noise. <br /> Let your higher mind take over.
         </motion.p>
 
-        {/* Slightly cleaner and more robust CTA structure */}
         <motion.div
           className="mt-8 flex flex-col items-center justify-center gap-4"
           initial={{ opacity: 0, y: 20 }}

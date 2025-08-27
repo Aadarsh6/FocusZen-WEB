@@ -18,7 +18,6 @@ const PrivacyPolicy = () => {
           <div className="w-16 h-px bg-white/20 mx-auto mt-8"></div>
         </div>
 
-        {/* Main content */}
         <div className="space-y-16">
           {/* Effective Date */}
           <div className="text-center">
@@ -27,7 +26,6 @@ const PrivacyPolicy = () => {
             </span>
           </div>
 
-          {/* Main Statement */}
           <div className="bg-white/5 border border-white/10 rounded-2xl p-12">
             <h2 className="text-3xl font-light text-white mb-8">Our Promise</h2>
             <p className="text-lg leading-relaxed text-gray-300">
@@ -37,7 +35,6 @@ const PrivacyPolicy = () => {
             </p>
           </div>
 
-          {/* What We Don't Collect */}
           <div>
             <h2 className="text-3xl font-light text-white mb-12">What We Never Collect</h2>
             <div className="grid md:grid-cols-2 gap-6">
@@ -103,7 +100,6 @@ const PrivacyPolicy = () => {
             </div>
           </div>
 
-          {/* No External Services */}
           <div>
             <h2 className="text-3xl font-light text-white mb-12">Zero External Dependencies</h2>
             <div className="bg-white/5 border border-white/10 rounded-2xl p-12">
