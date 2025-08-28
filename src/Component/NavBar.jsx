@@ -80,9 +80,12 @@ const NavBar = () => {
 
         {/* Desktop CTA Buttons */}
         <div className="hidden xl:flex items-center space-x-4">
-          {/* <button className="px-5 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white/90 font-medium hover:bg-white/20 transition-all duration-300">
-            Sign In
-          </button> */}
+          <a className="px-5 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white/90 font-medium hover:bg-white/20 transition-all duration-300"
+          href='https://x.com/adarshx_23/status/1950883988408541292'
+          target='_blank'
+          >
+            Demo
+          </a>
           <Link to="/focusMode">
             <button className="px-5 py-2.5 rounded-lg bg-white/80 text-black font-medium hover:bg-gray-200 transition-all duration-300 shadow-lg">
               Get Started
