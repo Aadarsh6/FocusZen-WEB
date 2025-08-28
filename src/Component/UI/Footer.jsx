@@ -178,7 +178,7 @@ const Footer = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           viewport={{ once: true }}
         >
-          <div className="max-w-md">
+          {/* <div className="max-w-md">
             <h4 className="font-jost font-medium text-white mb-3 tracking-tight">
               Stay Focused
             </h4>
@@ -200,7 +200,28 @@ const Footer = () => {
                 Subscribe
               </motion.button>
             </div>
+          </div> */}
+            {/* Contact */}
+          <div>
+            <h2 className="text-3xl font-light text-white mb-12">Questions?</h2>
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-12 text-center">
+              <p className="text-gray-300 mb-8 text-lg">
+                If you have any questions about this privacy policy:
+              </p>
+              <a
+                href="mailto:aadarshakmishra16@gmail.com"
+                className="inline-flex items-center px-8 py-4 bg-white text-black font-medium rounded-xl hover:bg-gray-100 transition-colors duration-300"
+              >
+                <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                </svg>
+                Contact Us
+              </a>
+            </div>
           </div>
+
+
         </motion.div>
 
         {/* Bottom Bar */}
