@@ -84,7 +84,7 @@ const NavBar = () => {
             Sign In
           </button> */}
           <Link to="/focusMode">
-            <button className="px-5 py-2.5 rounded-lg bg-white text-black font-medium hover:bg-gray-200 transition-all duration-300 shadow-lg">
+            <button className="px-5 py-2.5 rounded-lg bg-white/80 text-black font-medium hover:bg-gray-200 transition-all duration-300 shadow-lg">
               Get Started
             </button>
           </Link>
