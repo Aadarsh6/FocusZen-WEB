@@ -68,7 +68,7 @@ const FocusSetup = () => {
     setError("");
     
     try {
-      const hiddenUrls = ["https://focuszen.vercel.app/", "http://localhost:"];
+      const hiddenUrls = ["https://focuszen.aadarshm.me/", "https://focuszen.vercel.app/", "http://localhost:"];
       const validUserUrls = urls.filter(url => url.trim() !== "");
       
       // Validation
